@@ -1,5 +1,6 @@
 var ResourceGraphAttribute = [ "colors", "labels", "valueRange", "xlabel",
-		"ylabel", "strokeWidth", "legend", "labelsDiv", "width", "height" ];
+		"ylabel", "strokeWidth", "legend", "labelsDiv", "width", "height",
+		"graphHeight" ];
 
 var ResourceGraphElementView = wgp.DygraphElementView.extend({
 	initialize : function(argument) {
@@ -11,6 +12,8 @@ var ResourceGraphElementView = wgp.DygraphElementView.extend({
 		this.width = argument["width"];
 		this.height = argument["height"];
 		this.title = argument["title"];
+
+		this.graphHeight = this.height - 30;
 
 		this.attributes = argument["attributes"];
 		this.maxId = 0;
@@ -36,7 +39,6 @@ var ResourceGraphElementView = wgp.DygraphElementView.extend({
 			this.render();
 		}
 		console.log("#" + this.$el.attr("id"));
-		$("#" + this.$el.attr("id")).append("<p>" + this.title + "</p><br>");
 		$("#" + this.$el.attr("id")).css({
 			margin : "10px",
 			float : "left"
@@ -44,12 +46,13 @@ var ResourceGraphElementView = wgp.DygraphElementView.extend({
 
 	},
 	render : function() {
+
 		var data = this.getData();
-		$("#" + this.$el.attr("id")).append("<p>" + this.title + "</p><br>");
+		console.log("#" + this.$el.attr("id") + "render");
 		this.entity = new Dygraph(document.getElementById(this.$el.attr("id")),
 				data, this.getAttributes(ResourceGraphAttribute));
-
-		this.entity.resize(this.width, this.height);
+		this.entity.resize(this.width, this.graphHeight);
+		$("#" + this.$el.attr("id")).prepend("<h3>" + this.title + "</h3");
 	},
 	onAdd : function(graphModel) {
 		var dataArray = [];
