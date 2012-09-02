@@ -6,8 +6,6 @@ var NodeInfomationView = wgp.AbstractView.extend({
 		// this.collection = new NodeInfomationCollection();
 		// this.registerCollectionEvent();
 
-		$("#" + this.$el.attr("id")).addClass("dragbox");
-
 		// div Tagの作成を行う。
 		$("#" + this.$el.attr("id")).append('<div id="osCpuGraphView"></div>');
 
