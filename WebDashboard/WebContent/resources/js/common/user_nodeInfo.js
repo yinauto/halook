@@ -7,7 +7,6 @@ var osMemoryGraphViewElement = {
 		attributes : {
 			xlabel : "Time",
 			ylabel : "OS Memory",
-			title : "Os memory",
 			labels : [ "time", "PC1", "PC2" ]
 		}
 	}
@@ -16,9 +15,9 @@ var osMemoryGraphViewElement = {
 var osCpuGraphViewElement = {
 	viewClassName : "ResourceGraphElementView",
 	viewAttribute : {
-		title : "Os CPU",
-		width : 250,
-		height : 150,
+		title :"title",
+		width : 300,
+		height : 200,
 		graphId : "osCPU",
 		attributes : {
 			xlabel : "Time",
@@ -34,8 +33,6 @@ var nnCpuGraphViewElement = {
 		width : 250,
 		height : 150,
 		graphId : "nnCPU",
-		title : "NameNode CPU",
-
 		attributes : {
 			xlabel : "Time",
 			ylabel : "nn CPU",
@@ -47,9 +44,8 @@ var nnCpuGraphViewElement = {
 var memoryGraphViewElement = {
 	viewClassName : "ResourceGraphElementView",
 	viewAttribute : {
-		width : 250,
+		width : 200,
 		height : 150,
-		title : "Memory",
 		graphId : "Memory",
 		attributes : {
 			xlabel : "Time",
@@ -59,24 +55,10 @@ var memoryGraphViewElement = {
 	}
 };
 
-var nnMemoryGraphViewElement = {
-	viewClassName : "ResourceGraphElementView",
-	viewAttribute : {
-		width : 250,
-		height : 150,
-		graphId : "nnMemory",
-		attributes : {
-			title : "NameNode memory",
-			xlabel : "Time",
-			ylabel : "NN Memory",
-			labels : [ "time", "PC1" ]
-		}
-	}
-};
 var cpuGraphViewElement = {
 	viewClassName : "ResourceGraphElementView",
 	viewAttribute : {
-		width : 250,
+		width : 200,
 		height : 150,
 		graphId : "CPUs",
 		attributes : {
@@ -97,17 +79,12 @@ var mapTabElement = {
 	tabTitle : "Map",
 };
 
-var sliderViewElement = {
-	viewClassName : "SliderView"
-};
-
 var graphAreaTabElement = {
 	viewClassName : "wgp.MultiAreaView",
 	rootView : appView,
 	tabTitle : "Graph",
-	collection : [ sliderViewElement, separaterElement, memoryGraphViewElement,
-			cpuGraphViewElement, osCpuGraphViewElement, separaterElement,
-			nnCpuGraphViewElement ]
+	collection : [ memoryGraphViewElement, cpuGraphViewElement,
+			osCpuGraphViewElement, separaterElement, nnCpuGraphViewElement ]
 };
 
 var tabViewElement = {
@@ -129,6 +106,6 @@ var nodeInfomationMultiElement = {
 
 wgp.constants.VIEW_SETTINGS = {
 	"default" : graphAreaTabElement,
-	"/graph/" : tabViewElement,
+	"/graph1/" : tabViewElement,
 	"/nodeInfomation/" : nodeInfomationMultiElement
 };
