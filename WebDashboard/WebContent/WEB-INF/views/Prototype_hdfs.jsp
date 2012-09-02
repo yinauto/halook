@@ -36,6 +36,7 @@ var appView = new wgp.AppView();
 </script>
 <script src="<%= request.getContextPath()%>/resources/js/HDFSView/HDFSView/HDFSView.js"></script>
 <script src="<%= request.getContextPath()%>/resources/js/HDFSView/HDFSModel/HDFSModel.js"></script>
+<script src="<%= request.getContextPath()%>/resources/js/HDFSView/testData.js"></script>
 <script src="/WebDashboard/resources/js/common/user.js" type="text/javaScript"></script>
 
 <script>
@@ -93,8 +94,8 @@ var graphDataInterval = function(windowId, value){
     return innerFunction;
 }
 
-setInterval(graphDataInterval("Memory",18), 1000);
-setInterval(graphDataInterval("CPU",25), 1000);
+//setInterval(graphDataInterval("Memory",18), 1000);
+//setInterval(graphDataInterval("CPU",25), 1000);
 
 
 	</script>
