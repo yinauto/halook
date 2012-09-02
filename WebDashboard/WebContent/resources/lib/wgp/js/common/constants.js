@@ -39,3 +39,7 @@ wgp.constants.STATE_COLOR[wgp.constants.STATE.ERROR]="#FF0000";
 wgp.constants.IS_CHANGE = {};
 wgp.constants.IS_CHANGE.SIZE = {"pointX":true, "pointY":true, "width":true, "height":true};
 wgp.constants.IS_CHANGE.STATE = {"state":true};
+
+
+
+
