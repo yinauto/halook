@@ -2,7 +2,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-DisplayMode = wgp.constants.SORT_MODE.NODE;// "task";
+DisplayMode = "task";// "task";
 
 halook = {};
 halook.jobInfoSpace = {};
@@ -52,8 +52,8 @@ halook.dygraphChart.float = "right";
 
 halook.parentView = {};
 halook.parentView.taskSortFunctionTable = {
-	wgp.constants.SORT_MODE.TASK : _taskIDSort,
-	wgp.constants.SORT_MODE.NODE : _nodeSort
+	"task" : _taskIDSort,
+	"node" : _nodeSort
 };
 
 //グラフ最小の時間

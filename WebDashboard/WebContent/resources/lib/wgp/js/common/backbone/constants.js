@@ -46,9 +46,6 @@ wgp.constants.JOB_STATE.RUNNING = "RUNNING";
 wgp.constants.JOB_STATE.ERROR = "ERROR";
 wgp.constants.JOB_STATE.SUCCESS = "SUCCESS";
 
-wgp.constants.SORT_MODE = {};
-wgp.constants.SORT_MODE.TASK = "task";
-wgp.constants.SORT_MODE.NODE = "node";
 
 
 wgp.constants.STATE_COLOR = {};
