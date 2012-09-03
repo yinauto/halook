@@ -23,7 +23,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  ******************************************************************************/
-wgp.MapView = wgp.AbstractView.extend({
+wgp.mapView = wgp.AbstractView.extend({
     initialize:function(argument){
     	this.viewType = wgp.constants.VIEW_TYPE.VIEW;
     	this.collection = new MapElementList();
@@ -48,7 +48,9 @@ wgp.MapView = wgp.AbstractView.extend({
 		this.render();
     },
     render:function(){
-        this.paper =  new Raphael(document.getElementById(this.$el.attr("id")), this.width, this.height);    	
+        this.paper =  new Raphael(document.getElementById(this.$el.attr("id")), this.width, this.height);
+        //var circle =  this.paper.circle(50, 40, 10);
+        //circle.attr("fill", "#f00");
     },
     onAdd:function(mapElement){
     	var id = mapElement.id;
@@ -84,4 +86,4 @@ wgp.MapView = wgp.AbstractView.extend({
 	}
 });
 
-_.bindAll(wgp.MapView);
+_.bindAll(wgp.mapView);

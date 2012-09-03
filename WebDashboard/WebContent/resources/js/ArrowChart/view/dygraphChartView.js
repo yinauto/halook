@@ -65,7 +65,7 @@ var DygraphChartView = wgp.DygraphElementView.extend({
 
 //////////////
         
-		var dataArray = executeTaskCount(minGraphTime, maxGraphTime, sampleDatas, 10);
+		var dataArray = executeTaskCount(halook.parentView.minGraphTime, halook.parentView.maxGraphTime, sampleDatas, 10);
 
 		
         this.entity = null;

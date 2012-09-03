@@ -23,23 +23,27 @@ wgp.constants.CHANGE_TYPE = {};
 wgp.constants.CHANGE_TYPE.ADD = "add";
 wgp.constants.CHANGE_TYPE.DELETE = "delete";
 wgp.constants.CHANGE_TYPE.UPDATE = "update";
-wgp.constants.CHANGE_TYPE.ANIMATE = "animate";
-
 
 wgp.constants.STATE = {};
 wgp.constants.STATE.NORMAL = "normal";
 wgp.constants.STATE.WARN = "warn";
 wgp.constants.STATE.ERROR = "error";
+wgp.constants.STATE.MNORMAL = "mnormal";
+wgp.constants.STATE.RNORMAL = "rnormal";
+wgp.constants.STATE.MERROR = "merror";
+wgp.constants.STATE.RERROR = "rerror";
+
+
 
 wgp.constants.STATE_COLOR = {};
 wgp.constants.STATE_COLOR[wgp.constants.STATE.NORMAL]="#00FF00";
 wgp.constants.STATE_COLOR[wgp.constants.STATE.WARN]="#FFFF00";
 wgp.constants.STATE_COLOR[wgp.constants.STATE.ERROR]="#FF0000";
+wgp.constants.STATE_COLOR[wgp.constants.STATE.MNORMAL]="#70FF70";
+wgp.constants.STATE_COLOR[wgp.constants.STATE.RNORMAL]="#4444EE";
+wgp.constants.STATE_COLOR[wgp.constants.STATE.MERROR]="#FF7070";
+wgp.constants.STATE_COLOR[wgp.constants.STATE.RERROR]="blue";
 
 wgp.constants.IS_CHANGE = {};
 wgp.constants.IS_CHANGE.SIZE = {"pointX":true, "pointY":true, "width":true, "height":true};
 wgp.constants.IS_CHANGE.STATE = {"state":true};
-
-
-
-

@@ -1,6 +1,6 @@
 
 
-wgp.MapStateElementView = Backbone.View.extend({
+wgp.ArrowInfoStateElementView = Backbone.View.extend({
     initialize:function(argument){
     	_.bindAll();
         this._paper = argument.paper;
@@ -13,8 +13,8 @@ wgp.MapStateElementView = Backbone.View.extend({
     },
     render:function(){
     	var color = this.getStateColor();
-    	this.model.set({"attributes" : {fill:color}}, {silent:true});
-    	this.element = new ellipse(this.model.attributes, this._paper);
+    	this.model.set({"attributes" : {fill:color, backgroundColor:"red", "stroke-width":0}}, {silent:true});
+    	this.element = new textArea(this.model.attributes, this._paper);
     },
     update:function(model){
         var instance = this;
@@ -23,6 +23,7 @@ wgp.MapStateElementView = Backbone.View.extend({
     	this.element.setAttributes(model);
     },
     remove:function(property){
+    	console.log("hey remove is requested");
         this.element.hide();
     },
     getStateColor:function(){

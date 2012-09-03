@@ -865,6 +865,7 @@ textArea.prototype.getTextValue = function() {
  */
 textArea.prototype.setTextValue = function(text) {
     this.text = text;
+    return;
     var lineFeedCode = common.getLineFeedCode();
     
     var arrayText = String.split(text, lineFeedCode);
