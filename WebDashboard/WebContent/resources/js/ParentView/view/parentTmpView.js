@@ -6,6 +6,9 @@ DisplayMode = "task";// "task";
 
 halook = {};
 halook.jobInfoSpace = {};
+halook.filterMode = null;
+
+
 
 halook.jobInfoSpace.width = "865px";
 halook.jobInfoSpace.height = "90px";
@@ -60,7 +63,6 @@ halook.parentView.taskSortFunctionTable = {
 halook.arrowChartView;
 
 
-halook.taskDataForShow = [];
 
 // グラフ最小の時間
 halook.parentView.minGraphTime = 1346160591446;
@@ -178,6 +180,17 @@ var sampleDatas = [ {
 	Status : "FAIL",
 }, ];
 
+
+
+halook.taskDataOriginal = sampleDatas;
+halook.taskDataForShow = sampleDatas;
+
+
+halook.jobDataForShow = sampleDatasJob;
+
+
+
+
 // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // ////////////////データの整理をするところ
 // givenDatasはsampleDatasの形を入れることを想定
@@ -249,22 +262,22 @@ var ParentTmpView = wgp.AbstractView
 				halook.parentViewer = this;
 				// //////////////////最初のデータの処理を行う。//////////////////////////////////////////////////////////////////////
 
-				this._rearrangeDatas(sampleDatas);
+				this._rearrangeDatas(halook.taskDataForShow);
 
 				// /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				// /sortを実施
-				this._executeTaskSort(sampleDatas, DisplayMode);
-				// for ( var i = 0; i < sampleDatas.length; i++) {
-				// console.log("HostName :" + sampleDatas[i].Hostname + " "
-				// + sampleDatas[i].StartTime);
+				this._executeTaskSort(halook.taskDataForShow, DisplayMode);
+				// for ( var i = 0; i < halook.taskDataForShow.length; i++) {
+				// console.log("HostName :" + halook.taskDataForShow[i].Hostname + " "
+				// + halook.taskDataForShow[i].StartTime);
 				// }
-				// for ( var i = 0; i < sampleDatas.length; i++) {
-				// console.log("taskName :" + sampleDatas[i].TaskAttemptID);
+				// for ( var i = 0; i < halook.taskDataForShow.length; i++) {
+				// console.log("taskName :" + halook.taskDataForShow[i].TaskAttemptID);
 				// }
 				// 必要なhtml群を追加する。
 				this._insertInitHtml();
 
-				var dataArray = sampleDatas;
+				var dataArray = halook.taskDataForShow;
 
 				if (dataArray && dataArray.length > 0) {
 					this.addCollection(dataArray);
@@ -368,13 +381,24 @@ var ParentTmpView = wgp.AbstractView
 				} else {
 					console.log("didn't execute sort");
 				}
-				for ( var i = 0; i < sampleDatas.length; i++) {
-					console.log("HostName :" + sampleDatas[i].Hostname + " "
-							+ sampleDatas[i].StartTime);
+				for ( var i = 0; i < halook.taskDataForShow.length; i++) {
+					console.log("HostName :" + halook.taskDataForShow[i].Hostname + " "
+							+ halook.taskDataForShow[i].StartTime);
 				}
-				for ( var i = 0; i < sampleDatas.length; i++) {
-					console.log("taskName :" + sampleDatas[i].TaskAttemptID);
+				for ( var i = 0; i < halook.taskDataForShow.length; i++) {
+					console.log("taskName :" + halook.taskDataForShow[i].TaskAttemptID);
 				}
+				
+				
+				///collectionのリセット
+				this.collection.reset();
+				
+
+				if (halook.taskDataForShow && halook.taskDataForShow.length > 0) {
+					this.addCollection(halook.taskDataForShow);
+					this.render();
+				}
+
 
 			},
 			_insertInitHtml : function() {
@@ -541,9 +565,12 @@ var ParentTmpView = wgp.AbstractView
 			_changeToTask : function() {
 				console.log("change to task " + DisplayMode + " node");
 
-				if (DisplayMode != "task") {
+				if (DisplayMode != "task" || halook.filterMode != null) {
 					DisplayMode = "task";
-					halook.parentViewer._executeTaskSort(sampleDatas,
+					halook.taskDataForShow = halook.taskDataOriginal;
+					halook.filterMode = null;
+
+					halook.parentViewer._executeTaskSort(halook.taskDataForShow,
 							DisplayMode);
 					console.log("change to task " + this);
 					halook.arrowChartView.redraw("task");
@@ -551,32 +578,34 @@ var ParentTmpView = wgp.AbstractView
 			},
 			_changeToNode : function() {
 				console.log("change to node " + DisplayMode + " task");
-				if (DisplayMode != "node") {
+				if (DisplayMode != "node" || halook.filterMode != null) {
+					halook.taskDataForShow = halook.taskDataOriginal;
+					halook.filterMode = null;
+
 					DisplayMode = "node";
-					halook.parentViewer._executeTaskSort(sampleDatas,
+					halook.parentViewer._executeTaskSort(halook.taskDataForShow,
 							DisplayMode);
 					console.log("change to node " + this);
 					halook.arrowChartView.redraw("node");
 				}
 			},
 			_changeToFail : function() {
-				console.log("change to fail " + DisplayMode + " fail");
-				if (DisplayMode != "fail") {
-					DisplayMode = "fail";
-					halook.parentViewer._executeTaskSort(sampleDatas,
-							DisplayMode);
+				if(halook.filterMode != "fail"){
+					halook.filterMode = "fail";
+					console.log("change to fail " + DisplayMode + " fail");
+					halook.parentViewer._executeFilter();
 					console.log("change to fail " + this);
-					halook.arrowChartView.redraw("fail");
+				
+					halook.arrowChartView.redraw(DisplayMode);
 				}
 			},
 			_changeToKilled : function() {
-				console.log("change to killed " + DisplayMode + " killed");
-				if (DisplayMode != "killed") {
-					DisplayMode = "node";
-					halook.parentViewer._executeTaskSort(sampleDatas,
-							DisplayMode);
+				if(halook.filterMode != "killed"){
+					halook.filterMode = "killed";
+					console.log("change to killed " + DisplayMode + " killed");
+					halook.parentViewer._executeFilter();
 					console.log("change to killed " + this);
-					halook.arrowChartView.redraw("killed");
+					halook.arrowChartView.redraw(DisplayMode);
 				}
 			},	
 			addCollection : function(dataArray) {
@@ -584,7 +613,6 @@ var ParentTmpView = wgp.AbstractView
 					var instance = this;
 					console.log("dataArray :start"  );
 					_.each(dataArray, function(data, index) {
-						console.log("dataArray :start" + data.StartTime + data.Mapreduce );
 						var model = new instance.collection.model({
 							SubmitTime:data.SubmitTime,
 							StartTime:data.StartTime,
@@ -605,16 +633,68 @@ var ParentTmpView = wgp.AbstractView
 				}
 			},
 
+//			SubmitTime:null,
+//			StartTime:null,
+//			FinishTime:null,
+//			JobID:null,
+//			Status:null,
+//			Hostname:null,
+//			TaskAttemptID: null,
+//			Mapreduce: null,
+//			SimpleID: null,
+//			attemptTime: null,
+
 			// //////////描き加えるべき場所////////////////////////////////////////////
 			getData : function() {
 				var data = [];
 				_.each(this.collection.models, function(model, index) {
-					//r modelData = model.get("data");
+					var modelData = {StartTime:model.get("StartTime"),
+							FinishTime:model.get("FinishTime"),
+							SubmitTime:model.get("SubmitTime"),
+							Status:model.get("Status"),
+							attemptTime:model.get("attemptTime"),
+							JobID:model.get("JobID"),
+							Hostname:model.get("Hostname"),
+							TaskAttemptID:model.get("TaskAttemptID"),
+							Mapreduce:model.get("Mapreduce"),
+							SimpleID:model.get("SimpleID"),
+					};
 					//nsole.log("modelData: " + modelData.Status + modelData.JobID + modelData.TaskAttemptID);
-					data.push(model);
+					data.push(modelData);
 				});
 
 				return data;
+			},
+			_executeFilter : function(array, mode) {
+				var resultCollection;
+				if(halook.filterMode == "fail"){
+					resultCollection = halook.parentViewer.collection.where({Status:"FAIL"});
+				}else if(halook.filterMode == "killed"){
+					resultCollection = halook.parentViewer.collection.where({Status:"KILLED"});	
+				}
+				
+				
+				var data = [];
+				for(var i = 0; i < resultCollection.length; i ++) {
+					var modelData = {StartTime:resultCollection[i].get("StartTime"),
+							FinishTime:resultCollection[i].get("FinishTime"),
+							SubmitTime:resultCollection[i].get("SubmitTime"),
+							Status:resultCollection[i].get("Status"),
+							attemptTime:resultCollection[i].get("attemptTime"),
+							JobID:resultCollection[i].get("JobID"),
+							Hostname:resultCollection[i].get("Hostname"),
+							TaskAttemptID:resultCollection[i].get("TaskAttemptID"),
+							Mapreduce:resultCollection[i].get("Mapreduce"),
+							SimpleID:resultCollection[i].get("SimpleID"),
+					};
+					//nsole.log("modelData: " + modelData.Status + modelData.JobID + modelData.TaskAttemptID);
+					data.push(modelData);
+				};
+				
+				
+				
+				halook.taskDataForShow = data;
+
 			},
 
 		}

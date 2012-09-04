@@ -42,26 +42,26 @@ var ArrowChartView = wgp.AbstractView
 				var sd = new Date();
 				var fd = new Date();
 				var subd = new Date();
-				sd.setTime(sampleDatasJob.StartTime);
-				fd.setTime(sampleDatasJob.FinishTime);
-				subd.setTime(sampleDatasJob.SubmitTime);
+				sd.setTime(halook.jobDataForShow.StartTime);
+				fd.setTime(halook.jobDataForShow.FinishTime);
+				subd.setTime(halook.jobDataForShow.SubmitTime);
 				var jobColor;
-				if (sampleDatasJob.Status == wgp.constants.JOB_STATE.SUCCESS) {
+				if (halook.jobDataForShow.Status == wgp.constants.JOB_STATE.SUCCESS) {
 					jobColor = "#00FF00"
-				} else if (sampleDatasJob.Status == wgp.constants.JOB_STATE.FAIL) {
+				} else if (halook.jobDataForShow.Status == wgp.constants.JOB_STATE.FAIL) {
 					jobColor = "#FF0000"
-				} else if (sampleDatasJob.Status == wgp.constants.JOB_STATE.KILLED) {
+				} else if (halook.jobDataForShow.Status == wgp.constants.JOB_STATE.KILLED) {
 					jobColor = "#FF0000"
-				} else if (sampleDatasJob.Status == wgp.constants.JOB_STATE.RUNNING) {
+				} else if (halook.jobDataForShow.Status == wgp.constants.JOB_STATE.RUNNING) {
 					jobColor = "#0000FF"
 				}
 
 				$("#jobInfoSpace").html(
-						"<p><font size='6'><b>" + sampleDatasJob.JobID
+						"<p><font size='6'><b>" + halook.jobDataForShow.JobID
 								+ " : </b></font>" + "<font size='6' color='"
-								+ jobColor + "'><b>" + sampleDatasJob.Status
+								+ jobColor + "'><b>" + halook.jobDataForShow.Status
 								+ "</b></font></br> " + "<font size='5'>("
-								+ sampleDatasJob.JobName + ")</font></br>"
+								+ halook.jobDataForShow.JobName + ")</font></br>"
 								+ "  " + sd.toLocaleString() + "  -  "
 								+ fd.toLocaleString() + "( SUBMIT_TIME:"
 								+ subd.toLocaleString() + " )</br></p>");
@@ -69,8 +69,8 @@ var ArrowChartView = wgp.AbstractView
 				
 				
 				// /複数会登場するIDの記憶と番号登録
-				for ( var i = 0; i < sampleDatas.length; i++) {
-					var idstring = sampleDatas[i].TaskAttemptID;
+				for ( var i = 0; i < halook.taskDataForShow.length; i++) {
+					var idstring = halook.taskDataForShow[i].TaskAttemptID;
 					var idArray = idstring.split('_');
 					var rowCounter = 0;
 					idArray[5] = idArray[5].replace(/0/g, '');
@@ -120,8 +120,8 @@ var ArrowChartView = wgp.AbstractView
 			_drawArrowAndError : function(element) {
 				var rowCounter = 0;
 
-				for ( var i = 0; i < sampleDatas.length; i++) {
-					var data = sampleDatas[i];
+				for ( var i = 0; i < halook.taskDataForShow.length; i++) {
+					var data = halook.taskDataForShow[i];
 					var modelInfo;
 					var indexInCell = 1;
 					var totalInCell = 1;
@@ -228,7 +228,7 @@ var ArrowChartView = wgp.AbstractView
 
 					rowCounter++;
 					if (DisplayMode == "task"
-							&& (i != sampleDatas.length - 1 && sampleDatas[i + 1].attemptTime != 1)) {
+							&& (i != halook.taskDataForShow.length - 1 && halook.taskDataForShow[i + 1].attemptTime != 1)) {
 						rowCounter--;
 					}
 
@@ -286,14 +286,14 @@ var ArrowChartView = wgp.AbstractView
 			_drawCellTitle : function() {
 				if (DisplayMode == "task") {
 					var textRowCounter = 0;
-					for ( var i = 0; i < sampleDatas.length; i++) {
-						var data = sampleDatas[i];
+					for ( var i = 0; i < halook.taskDataForShow.length; i++) {
+						var data = halook.taskDataForShow[i];
 						console.log("now i am " + data.attemptTime + " "
 								+ data.Mapreduce + "_" + data.SimpleID);
 						//samokeDatasがソートされていることを前提に、ひとつ前のものと名前が同じなら、パスする。
 						if (textRowCounter != 0
-								&& sampleDatas[i - 1].Mapreduce == data.Mapreduce
-								&& sampleDatas[i - 1].SimpleID == data.SimpleID) {
+								&& halook.taskDataForShow[i - 1].Mapreduce == data.Mapreduce
+								&& halook.taskDataForShow[i - 1].SimpleID == data.SimpleID) {
 							// rowCounter--;
 							continue;
 						} else {
@@ -322,8 +322,8 @@ var ArrowChartView = wgp.AbstractView
 					}
 				} else if (DisplayMode == "node") {
 
-					for ( var i = 0; i < sampleDatas.length; i++) {
-						var labelString = sampleDatas[i].Hostname;
+					for ( var i = 0; i < halook.taskDataForShow.length; i++) {
+						var labelString = halook.taskDataForShow[i].Hostname;
 						var tmpLabelArray = labelString.split('/');
 						labelString = tmpLabelArray.join('\n');
 						console.log(labelString);

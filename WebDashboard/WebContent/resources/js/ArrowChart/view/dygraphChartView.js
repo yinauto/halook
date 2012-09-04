@@ -79,7 +79,7 @@ var DygraphChartView = wgp.DygraphElementView.extend({
 		// ////////////
 
 		var dataArray = executeTaskCount(halook.parentView.minGraphTime,
-				halook.parentView.maxGraphTime, sampleDatas, 30);
+				halook.parentView.maxGraphTime, halook.taskDataForShow, 30);
 
 		this.entity = null;
 		if (dataArray && dataArray.length > 0) {
