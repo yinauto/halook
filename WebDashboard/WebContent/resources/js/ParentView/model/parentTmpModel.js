@@ -4,10 +4,14 @@ var parentTmpModel = Backbone.Model.extend({
 		StartTime:null,
 		FinishTime:null,
 		JobID:null,
-		JobName:null,
-		Status:null
+		Status:null,
+		Hostname:null,
+		TaskAttemptID: null,
+		Mapreduce: null,
+		SimpleID: null,
+		attemptTime: null,
 	},
-	idAttribute:"JobID",
+	idAttribute:"TaskAttemptID",
 });
 
 var parentTmpModelCollection = Backbone.Collection.extend({

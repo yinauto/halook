@@ -206,12 +206,12 @@ wgp.ArrowStateElementView = Backbone.View.extend({
 			startd.setTime(arrow.StartTime);
 			var find = new Date();
 			find.setTime(arrow.FinishTime);
-			var infoString = "JobId:</br>" + arrow.JobID + "</br>"
+			var infoString = "<p>JobId:</br>" + arrow.JobID + "</br>"
 					+ "TaskAttemptID:</br>" + arrow.TaskAttemptID + "</br>"
 					+ "Status:</br>" + arrow.Status + "</br>"
 					+ "StartTime:</br>" + startd + "</br>" + "FinishTime:</br>"
 					+ find + "</br>" + "Hostname:</br>" + arrow.Hostname
-					+ "</br>";
+					+ "</br></p>";
 			$("#taskInfoSpace").html(infoString);
 		}
 

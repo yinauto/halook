@@ -57,15 +57,16 @@ var ArrowChartView = wgp.AbstractView
 				}
 
 				$("#jobInfoSpace").html(
-						"<font size='6'><b>" + sampleDatasJob.JobID
+						"<p><font size='6'><b>" + sampleDatasJob.JobID
 								+ " : </b></font>" + "<font size='6' color='"
 								+ jobColor + "'><b>" + sampleDatasJob.Status
 								+ "</b></font></br> " + "<font size='5'>("
 								+ sampleDatasJob.JobName + ")</font></br>"
 								+ "  " + sd.toLocaleString() + "  -  "
 								+ fd.toLocaleString() + "( SUBMIT_TIME:"
-								+ subd.toLocaleString() + " )</br>");
-
+								+ subd.toLocaleString() + " )</br></p>");
+				$("#jobInfoSpace p").css({marginLeft:10, marginTop:0});
+				
 				
 				// /複数会登場するIDの記憶と番号登録
 				for ( var i = 0; i < sampleDatas.length; i++) {
