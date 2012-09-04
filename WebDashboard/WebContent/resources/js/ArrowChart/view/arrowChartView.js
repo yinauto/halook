@@ -5,7 +5,7 @@ halook.arrowChart.paperWidth = 725;
 // 矢印絵画領域の始まるオフセット分
 halook.arrowChart.startLineX = 100;
 // ひとつのセルの高さの設定
-halook.arrowChart.cellHeight = 50;
+halook.arrowChart.cellHeight = 40;
 // アローチャート部分の長さ
 halook.arrowChart.arrowChartWidth = halook.arrowChart.paperWidth
 		- halook.arrowChart.startLineX;
@@ -64,22 +64,7 @@ var ArrowChartView = wgp.AbstractView
 								+ fd.toLocaleString() + "( SUBMIT_TIME:"
 								+ subd.toLocaleString() + " )</br>");
 
-				// 縦線の表示 端から100px
-				var modelData5 = new wgp.MapElement({
-					objectId : 0,
-					objectName : null,
-					height : halook.arrowChart.paperHeight,
-					width : 0,
-					pointX : halook.arrowChart.startLineX,
-					pointY : 0,
-					color : "blue"
-				});
-				new wgp.LineStateElementView({
-					model : modelData5,
-					paper : this.paper,
-					state : "rerror"
-				});
-
+				
 				// /複数会登場するIDの記憶と番号登録
 				for ( var i = 0; i < sampleDatas.length; i++) {
 					var idstring = sampleDatas[i].TaskAttemptID;
@@ -93,32 +78,10 @@ var ArrowChartView = wgp.AbstractView
 							halook.arrowChart.idCounter[(idArray[3] + "_" + idArray[4])] = idArray[5];
 					}
 				}
-
-				// /セルの線引きの作成
-				var cellCounter = Math.floor(halook.arrowChart.paperHeight
-						/ halook.arrowChart.cellHeight);
-				// console.log(cellCounter + "aaa");
-				for ( var k = 0; k < cellCounter + 1; k++) {
-					// console.log(i *halook.arrowChart.cellHeight + " cell
-					// height");
-
-					var modelData6 = new wgp.MapElement({
-						objectId : k + 10000,
-						objectName : null,
-						height : 0,
-						width : halook.arrowChart.paperWidth,
-						pointX : 0,
-						pointY : k * halook.arrowChart.cellHeight,
-						color : "black",
-						strokeWidth : 2
-					});
-					new wgp.LineStateElementView({
-						model : modelData6,
-						paper : this.paper,
-						state : "rerror"
-					});
-				}
-
+				
+				//基本となるテーブルの線を描く
+				this._drawTableLines();
+				
 				// 矢印たちと×印の絵画の作成
 				this._drawArrowAndError();
 
@@ -379,6 +342,63 @@ var ArrowChartView = wgp.AbstractView
 					}
 				}
 				;
+			},_drawTableLines:function(){
+				// 縦線の表示 端から100px
+				var modelData5 = new wgp.MapElement({
+					objectId : 0,
+					objectName : null,
+					height : halook.arrowChart.paperHeight,
+					width : 0,
+					pointX : halook.arrowChart.startLineX,
+					pointY : 0,
+					color : "#777777"
+				});
+				new wgp.LineStateElementView({
+					model : modelData5,
+					paper : this.paper,
+					state : "rerror"
+				});
+				
+				// /セルの線引きの作成
+				var cellCounter = Math.floor(halook.arrowChart.paperHeight
+						/ halook.arrowChart.cellHeight);
+				// console.log(cellCounter + "aaa");
+				for ( var k = 0; k < cellCounter + 1; k++) {
+					// console.log(i *halook.arrowChart.cellHeight + " cell
+					// height");
+
+					var modelData6 = new wgp.MapElement({
+						objectId : k + 10000,
+						objectName : null,
+						height : 0,
+						width : halook.arrowChart.paperWidth,
+						pointX : 0,
+						pointY : k * halook.arrowChart.cellHeight,
+						color : "black",
+						strokeWidth : 2
+					});
+					new wgp.LineStateElementView({
+						model : modelData6,
+						paper : this.paper,
+						state : "rerror"
+					});
+				}
+
+
 			},
+			
+			redraw:function(mode){
+				this.paper.clear();
+				DisplayMode = mode;
+				//基本となるテーブルの線を描く
+				this._drawTableLines();
+				
+				// 矢印たちと×印の絵画の作成
+				this._drawArrowAndError();
+
+				// textAreaの描画を行う。
+				this._drawCellTitle();
+			}
+			
 
 		});

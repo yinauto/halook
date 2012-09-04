@@ -7,14 +7,14 @@ DisplayMode = "task";// "task";
 halook = {};
 halook.jobInfoSpace = {};
 
-halook.jobInfoSpace.width = "800px";
+halook.jobInfoSpace.width = "870px";
 halook.jobInfoSpace.height = "90px";
 halook.jobInfoSpace.marginTop = "10px";
-halook.jobInfoSpace.marginRight = "10px";
+halook.jobInfoSpace.marginLeft = "10px";
 halook.jobInfoSpace.float = "left";
 
 halook.clearSpace = {};
-halook.clearSpace.height = "5px";
+halook.clearSpace.height = "15px";
 halook.clearSpace.clear = "both";
 
 halook.buttons = {};
@@ -22,15 +22,15 @@ halook.buttons.marginLeft = "10px";
 halook.buttons.float = "left";
 
 halook.taskButton = {};
-halook.taskButton.width = "100px";
+halook.taskButton.width = "120px";
 halook.taskButton.height = "40px";
 
 halook.nodeButton = {};
-halook.nodeButton.width = "100px";
+halook.nodeButton.width = "120px";
 halook.nodeButton.height = "40px";
 
 halook.taskInfoSpace = {};
-halook.taskInfoSpace.width = "110px";
+halook.taskInfoSpace.width = "115px";
 halook.taskInfoSpace.height = "400px";
 halook.taskInfoSpace.marginTop = "5px";
 halook.taskInfoSpace.marginRight = "5px";
@@ -51,22 +51,23 @@ halook.dygraphChart.backgroundColor = "#EEEEEE";
 halook.dygraphChart.float = "right";
 
 halook.parentView = {};
+halook.parentViewer;
 halook.parentView.taskSortFunctionTable = {
 	"task" : _taskIDSort,
 	"node" : _nodeSort
 };
 
-//グラフ最小の時間
+halook.arrowChartView;
+
+// グラフ最小の時間
 halook.parentView.minGraphTime = 1346160591446;
 // グラフ最大の時間
 halook.parentView.maxGraphTime = 1346160592319;
 // グラフのインターバルの時間
-halook.parentView.intervalTime = halook.parentView.maxGraphTime - halook.parentView.minGraphTime;
+halook.parentView.intervalTime = halook.parentView.maxGraphTime
+		- halook.parentView.minGraphTime;
 
-
-//halook.arrowChart = {};
-
-
+// halook.arrowChart = {};
 
 // /taskAttemptInfoArrayの情報。試行回数が複数のもののみ保持
 // maxTime: 同じタスクの試行回数の最大値
@@ -237,11 +238,11 @@ var ParentTmpView = wgp.AbstractView
 			initialize : function() {
 				this.viewType = wgp.constants.VIEW_TYPE.VIEW;
 				this.collection = new parentTmpModelCollection();
-				this.attributes = {};
 				this.registerCollectionEvent();
 				this.maxId = 0;
 				var realTag = $("#" + this.$el.attr("id"));
 
+				halook.parentViewer = this;
 				// //////////////////最初のデータの処理を行う。//////////////////////////////////////////////////////////////////////
 
 				this._rearrangeDatas(sampleDatas);
@@ -256,10 +257,9 @@ var ParentTmpView = wgp.AbstractView
 				// for ( var i = 0; i < sampleDatas.length; i++) {
 				// console.log("taskName :" + sampleDatas[i].TaskAttemptID);
 				// }
-				//必要なhtml群を追加する。
+				// 必要なhtml群を追加する。
 				this._insertInitHtml();
 
-				
 				if (this.width == null) {
 					this.width = realTag.width();
 				}
@@ -344,99 +344,152 @@ var ParentTmpView = wgp.AbstractView
 				if (halook.parentView.taskSortFunctionTable[mode] != null) {
 					console.log("execute sort");
 					array.sort(halook.parentView.taskSortFunctionTable[mode]);
-				} else
+				} else{
 					console.log("didn't execute sort");
+				}
+				 for ( var i = 0; i < sampleDatas.length; i++) {
+				 console.log("HostName :" + sampleDatas[i].Hostname + " "
+				 + sampleDatas[i].StartTime);
+				 }
+				 for ( var i = 0; i < sampleDatas.length; i++) {
+				 console.log("taskName :" + sampleDatas[i].TaskAttemptID);
+				 }
+
 			},
-			_insertInitHtml : function(){
+			_insertInitHtml : function() {
 				$("#" + this.$el.attr("id"))
-				.append(
-						'<div id="jobInfoSpace" style="border:solid;border-color:green;border-width:4px;"></div>'
-								+ '<div class="clearSpace"></div>');
-		$("#jobInfoSpace").css({
-			width : halook.jobInfoSpace.width,
-			height : halook.jobInfoSpace.height,
-			marginTop : halook.jobInfoSpace.marginTop,
-			marginRight : halook.jobInfoSpace.marginRight,
-			float : halook.jobInfoSpace.float,
-		});
-		$(".clearSpace").css({
-			height : halook.clearSpace.height,
-			clear : halook.clearSpace.clear
-		});
-		// ///////////////////////////////////////////////////////////
-		// ボタンたちの追加を行う。////////////////////////////////////////////
-		$("#" + this.$el.attr("id"))
-				.append(
-						'<div id="buttons"><input type="button" id="taskButton" value="task"></input></br><input type="button" id="nodeButton" value="node"></input></br><div id="taskInfoSpace" style="border:solid;border-color:red;border-width:4px;"></div>');
-		$("#buttons").css({
-			marginLeft : halook.buttons.marginLeft,
-			float : halook.buttons.float,
-		});
-		$("#taskButton").css({
-			width : halook.taskButton.width,
-			height : halook.taskButton.height,
-		});
-		$("#nodeButton").css({
-			// marginLeft:"10px",
-			width : halook.nodeButton.width,
-			height : halook.nodeButton.height,
-		});
-		$("#taskInfoSpace").css({
-			width : halook.taskInfoSpace.width,
-			height : halook.taskInfoSpace.height,
-			marginTop : halook.taskInfoSpace.marginTop,
-			marginRight : halook.taskInfoSpace.marginRight,
-			float : halook.taskInfoSpace.float,
-		});
-		// ///////////////////////////////////////////////////////////
-		// arrow用のdiv Tagの作成を行う。////////////////////////////////////
-		$("#" + this.$el.attr("id")).append(
-				'<div id="arrowChart"></div>');
-		$("#arrowChart").css({
-			width : halook.arrowChart.width,
-			height : halook.arrowChart.height,
-			overflow : halook.arrowChart.overflow,
-			overflowX : halook.arrowChart.overflowX,
-			float : halook.arrowChart.float,
-			backgroundColor : halook.arrowChart.backgroundColor
-		});
-		var arrowView = new ArrowChartView({
-			id : "arrowChart",
-			rootView : this
-		});
-		// /////////////////////////////////////////////////////////////////
-		// graph用のdiv Tagの作成を行う。//////////////////////////////////////
-		$("#" + this.$el.attr("id")).append(
-				'<div id="dygraphChart"></div>');
-		$("#dygraphChart").css({
-			width : halook.dygraphChart.width,
-			height : halook.dygraphChart.height,
-			backgroundColor : halook.dygraphChart.backgroundColor,
-			float : halook.dygraphChart.float,
-		});
+						.css(
+								{
+									background : "-moz-linear-gradient(-45deg, #f0f9ff 0%, #cbebff 47%, #a1dbff 100%)"
+								});
 
-		var dygraphView = new DygraphChartView({
-			id : "dygraphChart",
-			rootView : this
-		});
+				$("#" + this.$el.attr("id"))
+						.append(
+								'<div id="jobInfoSpace" style="border:solid;border-color:#7777FF;border-width:4px;"></div>'
+										+ '<div class="clearSpace"></div>');
+				$("#jobInfoSpace")
+						.css(
+								{
+									width : halook.jobInfoSpace.width,
+									height : halook.jobInfoSpace.height,
+									marginTop : halook.jobInfoSpace.marginTop,
+									marginLeft : halook.jobInfoSpace.marginLeft,
+									float : halook.jobInfoSpace.float,
+									/* For Mozilla/Gecko (Firefox etc) */
+									background : " -moz-linear-gradient(top, #1e5799 0%, #2989d8 50%, #207cca 51%, #7db9e8 100%)",
+									/* For Internet Explorer 5.5 - 7 */
+									filter : " progid:DXImageTransform.Microsoft.gradient(startColorstr=#FF0000FF, endColorstr=#FFFFFFFF)",
+								// /* For Internet Explorer 8 */
+								// -ms-filter:
+								// "progid:DXImageTransform.Microsoft.gradient(startColorstr=#FF0000FF,
+								// endColorstr=#FFFFFFFF)",
+								});
+				$(".clearSpace").css({
+					height : halook.clearSpace.height,
+					clear : halook.clearSpace.clear
+				});
+				// ///////////////////////////////////////////////////////////
+				// ボタンたちの追加を行う。////////////////////////////////////////////
+				$("#" + this.$el.attr("id"))
+						.append(
+								'<div id="buttons"><input type="button" id="taskButton" value="task"></input></br><input type="button" id="nodeButton" value="node"></input></br><div id="taskInfoSpace" style="background-color:#EEDDDD;border:outset;border-color:#AA7777;border-width:4px;"></div>');
+				$("#buttons").css({
+					marginLeft : halook.buttons.marginLeft,
+					float : halook.buttons.float,
+				});
+				$("#taskButton").css({
+					width : halook.taskButton.width,
+					height : halook.taskButton.height,
+				});
+				var instance = this;
+				
+				$("#taskButton").click(instance._changeToTask);
+				$("#taskButton").button();
+				$("#nodeButton").css({
+					// marginLeft:"10px",
+					width : halook.nodeButton.width,
+					height : halook.nodeButton.height,
+				});
+				$("#nodeButton").button();
+				$("#nodeButton").click(instance._changeToNode);
+				
+				$("#taskInfoSpace").css({
+					width : halook.taskInfoSpace.width,
+					height : halook.taskInfoSpace.height,
+					marginTop : halook.taskInfoSpace.marginTop,
+					marginRight : halook.taskInfoSpace.marginRight,
+					float : halook.taskInfoSpace.float,
+					background:"-moz-linear-gradient(-45deg, rgba(255,255,255,1) 0%, rgba(241,241,241,1) 50%, rgba(225,225,225,1) 51%, rgba(246,246,246,1) 100%)",
+				});
+				// ///////////////////////////////////////////////////////////
+				// arrow用のdiv Tagの作成を行う。////////////////////////////////////
+				$("#" + this.$el.attr("id")).append(
+						'<div id="arrowChart"></div>');
+				$("#arrowChart").css({
+					width : halook.arrowChart.width,
+					height : halook.arrowChart.height,
+					overflow : halook.arrowChart.overflow,
+					overflowX : halook.arrowChart.overflowX,
+					float : halook.arrowChart.float,
+					backgroundColor : halook.arrowChart.backgroundColor
+				});
+				halook.arrowChartView = new ArrowChartView({
+					id : "arrowChart",
+					rootView : this
+				});
+				console.log("this.arrowView : " + this.arrowView);
+				// /////////////////////////////////////////////////////////////////
+				// graph用のdiv Tagの作成を行う。//////////////////////////////////////
+				$("#" + this.$el.attr("id")).append(
+						'<div id="dygraphChart"></div>');
+				$("#dygraphChart").css({
+					width : halook.dygraphChart.width,
+					height : halook.dygraphChart.height,
+					backgroundColor : halook.dygraphChart.backgroundColor,
+					float : halook.dygraphChart.float,
+				});
 
-		// /////////////////////////////////////////////////////////////////
-		// ////arrow detail view
-		// $("#" + this.$el.attr("id")).append('<div id="arrowInfoView"
-		// style="padding:10px; color:white; position:absolute;
-		// border:white 2px dotted; display:none">detail info is
-		// here</div>');
-		// console.log($("#arrowInfoView") + " arrowInfoView");
-		// $("#arrowInfoView").css({
-		// "width":"200",
-		// "height":"200",
-		// "top":"0",
-		// "left":"0"
-		// });
+				this.dygraphView = new DygraphChartView({
+					id : "dygraphChart",
+					rootView : this
+				});
 
-		// ////////////////////////////////////////////////////////////////////////
+				// /////////////////////////////////////////////////////////////////
+				// ////arrow detail view
+				// $("#" + this.$el.attr("id")).append('<div id="arrowInfoView"
+				// style="padding:10px; color:white; position:absolute;
+				// border:white 2px dotted; display:none">detail info is
+				// here</div>');
+				// console.log($("#arrowInfoView") + " arrowInfoView");
+				// $("#arrowInfoView").css({
+				// "width":"200",
+				// "height":"200",
+				// "top":"0",
+				// "left":"0"
+				// });
 
-			}
+				// ////////////////////////////////////////////////////////////////////////
+
+			},
+			_changeToTask:function(){
+				console.log("change to task " + DisplayMode + " node");
+				
+				if(DisplayMode == "node"){
+					DisplayMode = "task";
+					halook.parentViewer._executeTaskSort(sampleDatas, DisplayMode);
+					console.log("change to task " + this);
+					halook.arrowChartView.redraw("task");
+				}
+			},
+			_changeToNode:function(){
+				console.log("change to node " + DisplayMode + " task");
+				if(DisplayMode == "task"){
+					DisplayMode = "node";
+					halook.parentViewer._executeTaskSort(sampleDatas, DisplayMode);
+					console.log("change to node " + this);
+					halook.arrowChartView.redraw("node");
+				}
+			},
 			
 
 		}

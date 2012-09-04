@@ -8,9 +8,6 @@ function plusMinus(num) {
 
 }
 
-
-
-
 var arrowMinLength = 10;
 var arrowMaxLength = 20;
 
@@ -25,7 +22,7 @@ wgp.ArrowStateElementView = Backbone.View.extend({
 		});
 		console.log(argument.state);
 		this.taskInfo = argument.info;
-		
+
 		this._paper = argument.paper;
 		if (this._paper == null) {
 			alert("paper is not exist");
@@ -88,7 +85,8 @@ wgp.ArrowStateElementView = Backbone.View.extend({
 			"attributes" : {
 				fill : color,
 				stroke : color,
-				"stroke-width" : 7
+				"stroke-width" : 7,
+
 			}
 		}, {
 			silent : true
@@ -136,76 +134,86 @@ wgp.ArrowStateElementView = Backbone.View.extend({
 	},
 	getStateColor : function() {
 		var state = this.model.get("state");
-		console.log(" getStateColor: "+ state);
+		console.log(" getStateColor: " + state);
 		var color = wgp.constants.STATE_COLOR[state];
 		if (color == null) {
 			color = wgp.constants.STATE_COLOR[wgp.constants.STATE.NORMAL];
 		}
 		return color;
-	}, addMouseoutArrow : function(){
-		//var targetInfo = this.arrowInfo;
-   		$("#arrowInfoView").css("display","none");
-//		console.log("mouseout "+targetInfo+ " " + targetInfo.element.object);
-		//targetInfo.element.object.hide();
-		//targetInfo.remove();
-		//targetInfo.hide();
-		
-		
 	},
-	 addMouseoverArrow:function (event){
-		arrowElement  = this.element;
+	addMouseoutArrow : function() {
+		// var targetInfo = this.arrowInfo;
+		$("#arrowInfoView").css("display", "none");
+		// console.log("mouseout "+targetInfo+ " " + targetInfo.element.object);
+		// targetInfo.element.object.hide();
+		// targetInfo.remove();
+		// targetInfo.hide();
+
+	},
+	addMouseoverArrow : function(event) {
+		arrowElement = this.element;
 		makeID++;
 		if ($.isArray(arrowElement)) {
-//			   		$("#arrowInfoView").css("display","block");
-		    		$("#arrowInfoView").css("top",event.screenY-40);
-		    		$("#arrowInfoView").css("left",event.screenX-150);
-		    		$("#arrowInfoView").css("background-color","rgba(255,255,255,0.9)");
-		    		$("#arrowInfoView").css("color","#222222");
-		    		$("#arrowInfoView").css("z-index",100);    		
-		 var arrow = this.taskInfo
-					var startd = new Date();
-					startd.setTime(arrow.StartTime);
-					var find = new Date();
-					find.setTime(arrow.FinishTime);
-					console.log("mousex, mousey, " + event.layerX + ", "+ event.layerY);
-					// view を追加
-					var modelData5 = new wgp.MapElement({
-						objectId : 50000 + makeID,
-						objectName : null,
-						height : 0,
-						width : 90,
-						pointX : event.layerX,
-						pointY : event.layerY, // +
-						// stringHeightOffset,
-						text : "testTextArea",
-						fontSize : 20
-					});
-//					var arrowInfoElement =  new wgp.ArrowInfoStateElementView({
-//						model : modelData5,
-//						paper : this._paper,
-//						state : "merror"
-//					});
-//					this.arrowInfo = arrowInfoElement;
-					console.log("this is : ", this );
-					
-					var infoString = " ID:</br>"
-					+ arrow.TaskAttemptID + "</br>" + "Status:</br>" + arrow.Status
-					+ "</br>" +  startd + " - </br>"
-					+  find + "</br>" + "Hostname:</br>"
-					+ arrow.Hostname + "</br>";
-					$("#taskInfoSpace").html(infoString);
+			// $("#arrowInfoView").css("display","block");
+			$("#arrowInfoView").css("top", event.screenY - 40);
+			$("#arrowInfoView").css("left", event.screenX - 150);
+			$("#arrowInfoView")
+					.css("background-color", "rgba(255,255,255,0.9)");
+			$("#arrowInfoView").css("color", "#222222");
+			$("#arrowInfoView").css("z-index", 100);
+			var arrow = this.taskInfo
+			var startd = new Date();
+			startd.setTime(arrow.StartTime);
+			var find = new Date();
+			find.setTime(arrow.FinishTime);
+			console
+					.log("mousex, mousey, " + event.layerX + ", "
+							+ event.layerY);
+			// view を追加
+			var modelData5 = new wgp.MapElement({
+				objectId : 50000 + makeID,
+				objectName : null,
+				height : 0,
+				width : 90,
+				pointX : event.layerX,
+				pointY : event.layerY, // +
+				// stringHeightOffset,
+				text : "testTextArea",
+				fontSize : 20
+			});
+			// var arrowInfoElement = new wgp.ArrowInfoStateElementView({
+			// model : modelData5,
+			// paper : this._paper,
+			// state : "merror"
+			// });
+			// this.arrowInfo = arrowInfoElement;
+			console.log("this is : ", this);
+			var attemptIDArray = arrow.TaskAttemptID.split("_");
+			var infoString = " ID:</br>" + attemptIDArray[0] + "</br>" + "_"
+					+ attemptIDArray[1] + "</br>" + "_" + attemptIDArray[2]
+					+ "_" + attemptIDArray[3] + "_" + attemptIDArray[4]
+					+ "</br>" + "_" + attemptIDArray[5] + "</br>" + "</br>"
+					+ "Status:</br>" + arrow.Status + "</br>" + "</br>"
+					+ startd + " - </br>" + find + "</br>" + "</br>"
+					+ "Hostname:</br>" + arrow.Hostname + "</br>";
+			$("#taskInfoSpace").html("<p>" + infoString + "</p>");
+			$("p").css({
+				"margin-left" : "3px"
+			});
 		} else {
-				var arrow = this.taskInfo
-				var startd = new Date();
-				startd.setTime(arrow.StartTime);
-				var find = new Date();
-				find.setTime(arrow.FinishTime);
-				var infoString = "JobId:</br>" + arrow.JobID + "</br>" + "TaskAttemptID:</br>"
-				+ arrow.TaskAttemptID + "</br>" + "Status:</br>" + arrow.Status
-				+ "</br>" + "StartTime:</br>" + startd + "</br>"
-				+ "FinishTime:</br>" + find + "</br>" + "Hostname:</br>"
-				+ arrow.Hostname + "</br>";
-				$("#taskInfoSpace").html(infoString);
+			var arrow = this.taskInfo
+			var startd = new Date();
+			startd.setTime(arrow.StartTime);
+			var find = new Date();
+			find.setTime(arrow.FinishTime);
+			var infoString = "JobId:</br>" + arrow.JobID + "</br>"
+					+ "TaskAttemptID:</br>" + arrow.TaskAttemptID + "</br>"
+					+ "Status:</br>" + arrow.Status + "</br>"
+					+ "StartTime:</br>" + startd + "</br>" + "FinishTime:</br>"
+					+ find + "</br>" + "Hostname:</br>" + arrow.Hostname
+					+ "</br>";
+			$("#taskInfoSpace").html(infoString);
 		}
 
-}});
+	}
+});
