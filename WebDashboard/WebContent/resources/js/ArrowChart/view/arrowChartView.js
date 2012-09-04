@@ -48,7 +48,9 @@ var ArrowChartView = wgp.AbstractView
 				var jobColor;
 				if (sampleDatasJob.Status == wgp.constants.JOB_STATE.SUCCESS) {
 					jobColor = "#00FF00"
-				} else if (sampleDatasJob.Status == wgp.constants.JOB_STATE.ERROR) {
+				} else if (sampleDatasJob.Status == wgp.constants.JOB_STATE.FAIL) {
+					jobColor = "#FF0000"
+				} else if (sampleDatasJob.Status == wgp.constants.JOB_STATE.KILLED) {
 					jobColor = "#FF0000"
 				} else if (sampleDatasJob.Status == wgp.constants.JOB_STATE.RUNNING) {
 					jobColor = "#0000FF"
@@ -166,7 +168,7 @@ var ArrowChartView = wgp.AbstractView
 									+ " "
 									+ halook.parentView.taskAttemptInfoDictionary[data.Mapreduce
 											+ "_" + data.SimpleID]);
-					if (data.Status == "ERROR") {
+					if (data.Status == "FAIL" || data.Status == "KILLED") {
 						var errorInfo;
 						if (DisplayMode == "task") {
 							errorInfo = this._calcErrorLengthAndStartPos(
@@ -185,12 +187,13 @@ var ArrowChartView = wgp.AbstractView
 							pointX : errorInfo.posX,
 							pointY : errorInfo.posY
 						});
-						if (data.Mapreduce == 'm') {
-							stateString = "merror";
-						} else if (data.Mapreduce == 'r') {
-							stateString = "rerror";
-						}
-						var errorStateString = "error";
+						if(data.Status == "FAIL")
+							stateString = "fail";
+						else if(data.Status == "KILLED")
+							stateString = "killed";
+ 						var errorStateString = errorStateString;
+ 						stateString = data.Mapreduce + stateString;
+
 						new wgp.ErrorStateElementView({
 							model : modelDataForError,
 							paper : this.paper,

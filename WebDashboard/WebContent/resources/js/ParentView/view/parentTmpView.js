@@ -83,7 +83,7 @@ var sampleDatasJob = {
 	SubmitTime : 1346160591446,
 	JobID : "job_201208281744_0012",
 	JobName : "PiEstimator",
-	Status : "ERROR",
+	Status : "KILLED",
 };
 var sampleDatas = [ {
 	StartTime : 1346160591456,
@@ -100,7 +100,7 @@ var sampleDatas = [ {
 	JobID : "job_201208281744_0012",
 	TaskAttemptID : "attempt_201306281744_0012_r_000033_1",
 	Hostname : "/default-rack/raoh02",
-	Status : "ERROR",
+	Status : "FAIL",
 }, {
 	StartTime : 1346160591556,
 	FinishTime : 1346160591846,
@@ -108,7 +108,7 @@ var sampleDatas = [ {
 	JobID : "job_201208281744_0012",
 	TaskAttemptID : "attempt_201306281744_0012_m_000004_2",
 	Hostname : "/default-rack/kenma",
-	Status : "ERROR",
+	Status : "KILLED",
 }, {
 	StartTime : 1346160591956,
 	FinishTime : 1346160592319,
@@ -132,7 +132,7 @@ var sampleDatas = [ {
 	JobID : "job_201208281744_0012",
 	TaskAttemptID : "attempt_201306281744_0012_r_000083_0",
 	Hostname : "/default-rack/raoh02",
-	Status : "ERROR",
+	Status : "FAIL",
 }, {
 	StartTime : 1346160592156,
 	FinishTime : 1346160592280,
@@ -148,7 +148,7 @@ var sampleDatas = [ {
 	JobID : "job_201208281744_0012",
 	TaskAttemptID : "attempt_201306281744_0012_r_000039_0",
 	Hostname : "/default-rack/raoh02",
-	Status : "ERROR",
+	Status : "KILLED",
 }, {
 	StartTime : 1346160591446,
 	FinishTime : 1346160592319,
@@ -172,7 +172,7 @@ var sampleDatas = [ {
 	JobID : "job_201208281744_0012",
 	TaskAttemptID : "attempt_201306281744_0012_m_000028_1",
 	Hostname : "/abcfield/raoh",
-	Status : "ERROR",
+	Status : "FAIL",
 }, ];
 
 // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -326,7 +326,7 @@ var ParentTmpView = wgp.AbstractView
 					// (successNum:同じタスクの成功数の最大値・・・イランとおもうけど)
 					if (status == wgp.constants.JOB_STATE.SUCCESS) {
 						(halook.parentView.taskAttemptInfoDictionary[keyName]).successNum = 1;
-					} else if (status == wgp.constants.JOB_STATE.ERROR) {
+					} else if (status == wgp.constants.JOB_STATE.FAIL) {
 						(halook.parentView.taskAttemptInfoDictionary[keyName]).failNum++;
 					} else if (status == wgp.constants.JOB_STATE.RUNNING) {
 						(halook.parentView.taskAttemptInfoDictionary[keyName]).runningNum++;
@@ -344,23 +344,25 @@ var ParentTmpView = wgp.AbstractView
 				if (halook.parentView.taskSortFunctionTable[mode] != null) {
 					console.log("execute sort");
 					array.sort(halook.parentView.taskSortFunctionTable[mode]);
-				} else{
+				} else {
 					console.log("didn't execute sort");
 				}
-				 for ( var i = 0; i < sampleDatas.length; i++) {
-				 console.log("HostName :" + sampleDatas[i].Hostname + " "
-				 + sampleDatas[i].StartTime);
-				 }
-				 for ( var i = 0; i < sampleDatas.length; i++) {
-				 console.log("taskName :" + sampleDatas[i].TaskAttemptID);
-				 }
+				for ( var i = 0; i < sampleDatas.length; i++) {
+					console.log("HostName :" + sampleDatas[i].Hostname + " "
+							+ sampleDatas[i].StartTime);
+				}
+				for ( var i = 0; i < sampleDatas.length; i++) {
+					console.log("taskName :" + sampleDatas[i].TaskAttemptID);
+				}
 
 			},
 			_insertInitHtml : function() {
 				$("#" + this.$el.attr("id"))
 						.css(
 								{
-									background : "-moz-linear-gradient(-45deg, #f0f9ff 0%, #cbebff 47%, #a1dbff 100%)"
+									background : "-moz-linear-gradient(-45deg, #f0f9ff 0%, #cbebff 47%, #a1dbff 100%)",
+									overflow : "hidden",
+
 								});
 
 				$("#" + this.$el.attr("id"))
@@ -392,35 +394,53 @@ var ParentTmpView = wgp.AbstractView
 				// ボタンたちの追加を行う。////////////////////////////////////////////
 				$("#" + this.$el.attr("id"))
 						.append(
-								'<div id="buttons"><input type="button" id="taskButton" value="task"></input></br><input type="button" id="nodeButton" value="node"></input></br><div id="taskInfoSpace" style="background-color:#EEDDDD;border:outset;border-color:#AA7777;border-width:4px;"></div>');
-				$("#buttons").css({
-					marginLeft : halook.buttons.marginLeft,
-					float : halook.buttons.float,
-				});
+								'<div id="searchSpace"><h3><a href="#">Normal Sort</a></h3><div id="buttons"><input type="button" id="taskButton" value="task"></input><input type="button" id="nodeButton" value="node"></input></br></div><h3><a href="#">Detail Sort</a></h3><div id="detailSearch" style="width:900;">aaa</div></div><div id="taskInfoSpace" style="background-color:#EEDDDD;border:outset;border-color:#AA7777;border-width:4px;"></div>');
+				// $("#searchSpace").css({height:500});
+				// $("#detailSearch").css({ height:300});
+				// $("#buttons").css({
+				// height: 100
+				// // marginLeft : halook.buttons.marginLeft,
+				// // float : halook.buttons.float,
+				// });
 				$("#taskButton").css({
 					width : halook.taskButton.width,
 					height : halook.taskButton.height,
+					float : "left",
 				});
+
 				var instance = this;
-				
+
 				$("#taskButton").click(instance._changeToTask);
 				$("#taskButton").button();
 				$("#nodeButton").css({
 					// marginLeft:"10px",
 					width : halook.nodeButton.width,
 					height : halook.nodeButton.height,
+					float : "left",
+
 				});
 				$("#nodeButton").button();
 				$("#nodeButton").click(instance._changeToNode);
-				
-				$("#taskInfoSpace").css({
-					width : halook.taskInfoSpace.width,
-					height : halook.taskInfoSpace.height,
-					marginTop : halook.taskInfoSpace.marginTop,
-					marginRight : halook.taskInfoSpace.marginRight,
-					float : halook.taskInfoSpace.float,
-					background:"-moz-linear-gradient(-45deg, rgba(255,255,255,1) 0%, rgba(241,241,241,1) 50%, rgba(225,225,225,1) 51%, rgba(246,246,246,1) 100%)",
+
+				$("#searchSpace").css({
+					"margin-left" : 10
 				});
+				$("#searchSpace").accordion({
+					autoHeight : false,
+					navigation : true
+				});
+
+				$("#taskInfoSpace")
+						.css(
+								{
+									width : halook.taskInfoSpace.width,
+									height : halook.taskInfoSpace.height,
+									marginTop : halook.taskInfoSpace.marginTop,
+									marginRight : halook.taskInfoSpace.marginRight,
+									float : halook.taskInfoSpace.float,
+									background : "-moz-linear-gradient(-45deg, rgba(255,255,255,1) 0%, rgba(241,241,241,1) 50%, rgba(225,225,225,1) 51%, rgba(246,246,246,1) 100%)",
+								});
+
 				// ///////////////////////////////////////////////////////////
 				// arrow用のdiv Tagの作成を行う。////////////////////////////////////
 				$("#" + this.$el.attr("id")).append(
@@ -471,26 +491,27 @@ var ParentTmpView = wgp.AbstractView
 				// ////////////////////////////////////////////////////////////////////////
 
 			},
-			_changeToTask:function(){
+			_changeToTask : function() {
 				console.log("change to task " + DisplayMode + " node");
-				
-				if(DisplayMode == "node"){
+
+				if (DisplayMode == "node") {
 					DisplayMode = "task";
-					halook.parentViewer._executeTaskSort(sampleDatas, DisplayMode);
+					halook.parentViewer._executeTaskSort(sampleDatas,
+							DisplayMode);
 					console.log("change to task " + this);
 					halook.arrowChartView.redraw("task");
 				}
 			},
-			_changeToNode:function(){
+			_changeToNode : function() {
 				console.log("change to node " + DisplayMode + " task");
-				if(DisplayMode == "task"){
+				if (DisplayMode == "task") {
 					DisplayMode = "node";
-					halook.parentViewer._executeTaskSort(sampleDatas, DisplayMode);
+					halook.parentViewer._executeTaskSort(sampleDatas,
+							DisplayMode);
 					console.log("change to node " + this);
 					halook.arrowChartView.redraw("node");
 				}
 			},
-			
 
 		}
 
