@@ -66,7 +66,7 @@ var DygraphChartView = wgp.DygraphElementView.extend({
 		this.registerCollectionEvent();
 		this.graphId = "taskGraph";
 		this.maxId = 0;
-		appView.addViews([ this ]);
+		// appView.addViews([ this ]);
 
 		var realTag = $("#" + this.$el.attr("id"));
 		if (this.width == null) {
@@ -88,7 +88,7 @@ var DygraphChartView = wgp.DygraphElementView.extend({
 		}
 		// /////////////////
 
-		console.log('called initialize');
+		// console.log('called initialize');
 	},
 	render : function() {
 		var data = this.getData();
@@ -97,7 +97,7 @@ var DygraphChartView = wgp.DygraphElementView.extend({
 
 		// this.entity.resize(this.width, this.height);
 
-		console.log('call render');
+		// console.log('call render');
 	},
 	onAdd : function(element) {
 		var dataArray = [];
@@ -119,13 +119,13 @@ var DygraphChartView = wgp.DygraphElementView.extend({
 				file : dataArray
 			});
 		}
-		console.log('call onAdd dygraph');
+		// console.log('call onAdd dygraph');
 	},
 	onChange : function(element) {
-		console.log('called changeModel');
+		// console.log('called changeModel');
 	},
 	onRemove : function(element) {
-		console.log('called removeModel');
+		// console.log('called removeModel');
 	},
 	addCollection : function(dataArray) {
 		if (dataArray != null) {

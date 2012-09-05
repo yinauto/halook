@@ -25,7 +25,7 @@ wgp.ArrowStateElementView = Backbone.View.extend({
 		this.model.set({
 			state : argument.state
 		});
-		console.log(argument.state);
+//		console.log(argument.state);
 		this.taskInfo = argument.info;
 
 		this._paper = argument.paper;
@@ -174,7 +174,7 @@ wgp.ArrowStateElementView = Backbone.View.extend({
 	},
 	getStateColor : function() {
 		var state = this.model.get("state");
-		console.log(" getStateColor: " + state);
+//		console.log(" getStateColor: " + state);
 		var color = wgp.constants.STATE_COLOR[state];
 		if (color == null) {
 			color = wgp.constants.STATE_COLOR[wgp.constants.STATE.NORMAL];
@@ -209,8 +209,8 @@ wgp.ArrowStateElementView = Backbone.View.extend({
 				startd.setTime(arrow.StartTime);
 				var find = new Date();
 				find.setTime(arrow.FinishTime);
-				console.log("mousex, mousey, " + event.layerX + ", "
-						+ event.layerY);
+//				console.log("mousex, mousey, " + event.layerX + ", "
+//						+ event.layerY);
 				// view を追加
 				var modelData5 = new wgp.MapElement({
 					objectId : 50000 + makeID,
@@ -229,7 +229,7 @@ wgp.ArrowStateElementView = Backbone.View.extend({
 				// state : "merror"
 				// });
 				// this.arrowInfo = arrowInfoElement;
-				console.log("this is : ", this);
+//				console.log("this is : ", this);
 				var attemptIDArray = arrow.TaskAttemptID.split("_");
 				var infoString = " ID:</br>" + attemptIDArray[0] + "</br>"
 						+ "_" + attemptIDArray[1] + "</br>" + "_"

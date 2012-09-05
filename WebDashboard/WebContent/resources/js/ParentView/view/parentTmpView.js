@@ -8,8 +8,6 @@ halook = {};
 halook.jobInfoSpace = {};
 halook.filterMode = null;
 
-
-
 halook.jobInfoSpace.width = "865px";
 halook.jobInfoSpace.height = "90px";
 halook.jobInfoSpace.marginTop = "10px";
@@ -46,6 +44,8 @@ halook.arrowChart.overflow = "scroll";
 halook.arrowChart.overflowX = "hidden";
 halook.arrowChart.backgroundColor = "#EEEEEE";
 halook.arrowChart.float = "right";
+halook.arrowChart.marginTop = 5;
+halook.arrowChart.background = "-moz-linear-gradient(-45deg, rgba(255,255,255,1) 0%, rgba(241,241,241,1) 50%, rgba(225,225,225,1) 51%, rgba(246,246,246,1) 100%)";
 
 halook.dygraphChart = {};
 halook.dygraphChart.width = "700px";
@@ -61,8 +61,6 @@ halook.parentView.taskSortFunctionTable = {
 };
 
 halook.arrowChartView;
-
-
 
 // グラフ最小の時間
 halook.parentView.minGraphTime = 1346160591446;
@@ -97,7 +95,7 @@ var sampleDatas = [ {
 	JobID : "job_201208281744_0012",
 	TaskAttemptID : "attempt_201306281744_0012_m_000004_1",
 	Hostname : "/abcfield/raoh",
-	Status : "SUCCESS",
+	Status : "KILLED",
 }, {
 	StartTime : 1346160591856,
 	FinishTime : 1346160592046,
@@ -113,7 +111,7 @@ var sampleDatas = [ {
 	JobID : "job_201208281744_0012",
 	TaskAttemptID : "attempt_201306281744_0012_m_000004_2",
 	Hostname : "/default-rack/kenma",
-	Status : "KILLED",
+	Status : "SUCCESS",
 }, {
 	StartTime : 1346160591956,
 	FinishTime : 1346160592319,
@@ -121,7 +119,7 @@ var sampleDatas = [ {
 	JobID : "job_201208281744_0012",
 	TaskAttemptID : "attempt_201306281744_0012_m_000004_0",
 	Hostname : "/default-rack/raoh05",
-	Status : "RUNNING",
+	Status : "FAIL",
 }, {
 	StartTime : 1346160591446,
 	FinishTime : 1346160592246,
@@ -161,7 +159,7 @@ var sampleDatas = [ {
 	JobID : "job_201208281744_0012",
 	TaskAttemptID : "attempt_201306281744_0012_m_000028_0",
 	Hostname : "/abcfield/raoh",
-	Status : "RUNNING",
+	Status : "KILLED",
 }, {
 	StartTime : 1346160591756,
 	FinishTime : 1346160591956,
@@ -169,7 +167,7 @@ var sampleDatas = [ {
 	JobID : "job_201208281744_0012",
 	TaskAttemptID : "attempt_201306281744_0012_r_000033_0",
 	Hostname : "/default-rack02/menma02",
-	Status : "RUNNING",
+	Status : "FAIL",
 }, {
 	StartTime : 1346160591746,
 	FinishTime : 1346160592300,
@@ -177,19 +175,103 @@ var sampleDatas = [ {
 	JobID : "job_201208281744_0012",
 	TaskAttemptID : "attempt_201306281744_0012_m_000028_1",
 	Hostname : "/abcfield/raoh",
-	Status : "FAIL",
+	Status : "SUCCESS",
 }, ];
 
-
+// var sampleDatas = [ {
+// StartTime : 1346160591456,
+// FinishTime : 1346160591946,
+// SubmitTime : 1346160591446,
+// JobID : "job_201208281744_0012",
+// TaskAttemptID : "attempt_201306281744_0012_m_000004_1",
+// Hostname : "/abcfield/raoh",
+// Status : "SUCCESS",
+// }, {
+// StartTime : 1346160591856,
+// FinishTime : 1346160592046,
+// SubmitTime : 1346160591446,
+// JobID : "job_201208281744_0012",
+// TaskAttemptID : "attempt_201306281744_0012_r_000033_1",
+// Hostname : "/default-rack/raoh02",
+// Status : "FAIL",
+// }, {
+// StartTime : 1346160591556,
+// FinishTime : 1346160591846,
+// SubmitTime : 1346160591446,
+// JobID : "job_201208281744_0012",
+// TaskAttemptID : "attempt_201306281744_0012_m_000004_2",
+// Hostname : "/default-rack/kenma",
+// Status : "KILLED",
+// }, {
+// StartTime : 1346160591956,
+// FinishTime : 1346160592319,
+// SubmitTime : 1346160591446,
+// JobID : "job_201208281744_0012",
+// TaskAttemptID : "attempt_201306281744_0012_m_000004_0",
+// Hostname : "/default-rack/raoh05",
+// Status : "RUNNING",
+// }, {
+// StartTime : 1346160591446,
+// FinishTime : 1346160592246,
+// SubmitTime : 1346160591446,
+// JobID : "job_201208281744_0012",
+// TaskAttemptID : "attempt_201306281744_0012_r_000013_0",
+// Hostname : "/abcfield/raoh",
+// Status : "SUCCESS",
+// }, {
+// StartTime : 1346160591756,
+// FinishTime : 1346160592046,
+// SubmitTime : 1346160591446,
+// JobID : "job_201208281744_0012",
+// TaskAttemptID : "attempt_201306281744_0012_r_000083_0",
+// Hostname : "/default-rack/raoh02",
+// Status : "FAIL",
+// }, {
+// StartTime : 1346160592156,
+// FinishTime : 1346160592280,
+// SubmitTime : 1346160591446,
+// JobID : "job_201208281744_0012",
+// TaskAttemptID : "attempt_201306281744_0012_r_000033_2",
+// Hostname : "/oioioi/raoh",
+// Status : "SUCCESS",
+// }, {
+// StartTime : 1346160591556,
+// FinishTime : 1346160591646,
+// SubmitTime : 1346160591446,
+// JobID : "job_201208281744_0012",
+// TaskAttemptID : "attempt_201306281744_0012_r_000039_0",
+// Hostname : "/default-rack/raoh02",
+// Status : "KILLED",
+// }, {
+// StartTime : 1346160591446,
+// FinishTime : 1346160592319,
+// SubmitTime : 1346160591446,
+// JobID : "job_201208281744_0012",
+// TaskAttemptID : "attempt_201306281744_0012_m_000028_0",
+// Hostname : "/abcfield/raoh",
+// Status : "RUNNING",
+// }, {
+// StartTime : 1346160591756,
+// FinishTime : 1346160591956,
+// SubmitTime : 1346160591446,
+// JobID : "job_201208281744_0012",
+// TaskAttemptID : "attempt_201306281744_0012_r_000033_0",
+// Hostname : "/default-rack02/menma02",
+// Status : "RUNNING",
+// }, {
+// StartTime : 1346160591746,
+// FinishTime : 1346160592300,
+// SubmitTime : 1346160591446,
+// JobID : "job_201208281744_0012",
+// TaskAttemptID : "attempt_201306281744_0012_m_000028_1",
+// Hostname : "/abcfield/raoh",
+// Status : "FAIL",
+// }, ];
 
 halook.taskDataOriginal = sampleDatas;
 halook.taskDataForShow = sampleDatas;
 
-
 halook.jobDataForShow = sampleDatasJob;
-
-
-
 
 // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // ////////////////データの整理をするところ
@@ -251,15 +333,15 @@ function _nodeSort(first, second) {
 
 var ParentTmpView = wgp.AbstractView
 		.extend({
-			initialize : function() {
+			initialize : function(arguments, treeString) {
 				this.viewType = wgp.constants.VIEW_TYPE.VIEW;
-				this.collection = new parentTmpModelCollection();
+				// this.collection = new parentTmpModelCollection();
+				var appView = new wgp.AppView();
+				appView.addView(this, treeString.id + "%");
 				this.registerCollectionEvent();
 				this.maxId = 0;
 				var realTag = $("#" + this.$el.attr("id"));
 
-
-				
 				halook.parentViewer = this;
 				// //////////////////最初のデータの処理を行う。//////////////////////////////////////////////////////////////////////
 
@@ -269,38 +351,48 @@ var ParentTmpView = wgp.AbstractView
 				// /sortを実施
 				this._executeTaskSort(halook.taskDataForShow, DisplayMode);
 				// for ( var i = 0; i < halook.taskDataForShow.length; i++) {
-				// console.log("HostName :" + halook.taskDataForShow[i].Hostname + " "
+				// console.log("HostName :" + halook.taskDataForShow[i].Hostname
+				// + " "
 				// + halook.taskDataForShow[i].StartTime);
 				// }
 				// for ( var i = 0; i < halook.taskDataForShow.length; i++) {
-				// console.log("taskName :" + halook.taskDataForShow[i].TaskAttemptID);
+				// console.log("taskName :" +
+				// halook.taskDataForShow[i].TaskAttemptID);
 				// }
 				// 必要なhtml群を追加する。
 				this._insertInitHtml();
 
+				var dt = new Date();
+				appView.getTermData([ "/hdfs/raoh%" ], new Date(
+						dt.getTime() - 1000000000), new Date());
 				var dataArray = halook.taskDataForShow;
 
 				if (dataArray && dataArray.length > 0) {
 					this.addCollection(dataArray);
 					this.render();
 				}
-				
-//				var array = this.collection.where({Status:"SUCCESS"});
-//				alert(array.length + "  kikai");
-//				
+
+				// var array = this.collection.where({Status:"SUCCESS"});
+				// alert(array.length + " kikai");
+				//				
 				var datas = this.getData();
-				console.log("data dayo " + datas.length);
+				// console.log("data dayo " + datas.length);
 				var sampleModel = this.collection.pop();
-//				alert(sampleModel.get("Status"));
-				var array = this.collection.where({Status:"SUCCESS"});
-//				alert(array[0].get("TaskAttemptID") +" "+ array[1].get("TaskAttemptID") +" "+ array[2].get("TaskAttemptID") + "  kikai");
-				
+				// alert(sampleModel.get("Status"));
+				var array = this.collection.where({
+					Status : "SUCCESS"
+				});
+				// alert(array[0].get("TaskAttemptID") +" "+
+				// array[1].get("TaskAttemptID") +" "+
+				// array[2].get("TaskAttemptID") + " kikai");
+
 				if (this.width == null) {
 					this.width = realTag.width();
 				}
 				if (this.height == null) {
 					this.height = realTag.height();
 				}
+				// console.log("get test term data");
 
 				// console.log('called initialize parent view');
 			},
@@ -377,29 +469,28 @@ var ParentTmpView = wgp.AbstractView
 			},
 			_executeTaskSort : function(array, mode) {
 				if (halook.parentView.taskSortFunctionTable[mode] != null) {
-					console.log("execute sort");
+					// console.log("execute sort");
 					array.sort(halook.parentView.taskSortFunctionTable[mode]);
 				} else {
-					console.log("didn't execute sort");
+					// console.log("didn't execute sort");
 				}
-				for ( var i = 0; i < halook.taskDataForShow.length; i++) {
-					console.log("HostName :" + halook.taskDataForShow[i].Hostname + " "
-							+ halook.taskDataForShow[i].StartTime);
-				}
-				for ( var i = 0; i < halook.taskDataForShow.length; i++) {
-					console.log("taskName :" + halook.taskDataForShow[i].TaskAttemptID);
-				}
-				
-				
-				///collectionのリセット
+				// for ( var i = 0; i < halook.taskDataForShow.length; i++) {
+				// // console.log("HostName :"
+				// // + halook.taskDataForShow[i].Hostname + " "
+				// // + halook.taskDataForShow[i].StartTime);
+				// }
+				// for ( var i = 0; i < halook.taskDataForShow.length; i++) {
+				// console.log("taskName :"
+				// + halook.taskDataForShow[i].TaskAttemptID);
+				// }
+
+				// /collectionのリセット
 				this.collection.reset();
-				
 
 				if (halook.taskDataForShow && halook.taskDataForShow.length > 0) {
 					this.addCollection(halook.taskDataForShow);
 					this.render();
 				}
-
 
 			},
 			_insertInitHtml : function() {
@@ -432,7 +523,10 @@ var ParentTmpView = wgp.AbstractView
 								// "progid:DXImageTransform.Microsoft.gradient(startColorstr=#FF0000FF,
 								// endColorstr=#FFFFFFFF)",
 								});
-				$("#jobInfoSpace p").css({marginLeft:5, marginTop:0});
+				$("#jobInfoSpace p").css({
+					marginLeft : 5,
+					marginTop : 0
+				});
 				$(".clearSpace").css({
 					height : halook.clearSpace.height,
 					clear : halook.clearSpace.clear
@@ -489,9 +583,6 @@ var ParentTmpView = wgp.AbstractView
 				$("#killedButton").button();
 				$("#killedButton").click(instance._changeToKilled);
 
-				
-				
-				
 				$("#searchSpace").css({
 					"margin-left" : 10
 				});
@@ -513,23 +604,27 @@ var ParentTmpView = wgp.AbstractView
 
 				// ///////////////////////////////////////////////////////////
 				// arrow用のdiv Tagの作成を行う。////////////////////////////////////
-				$("#" + this.$el.attr("id")).append(
-						'<div id="arrowChart" style="border:outset;border-color:#AA7777;border-width:4px;"></div>');
+				$("#" + this.$el.attr("id"))
+						.append(
+								'<div id="arrowChart" style="border:outset;border-color:#AA7777;border-width:4px;"></div>');
 				$("#arrowChart").css({
 					width : halook.arrowChart.width,
 					height : halook.arrowChart.height,
 					overflow : halook.arrowChart.overflow,
 					overflowX : halook.arrowChart.overflowX,
-					marginTop:5,
+					marginTop : halook.arrowChart.marginTop,
 					float : halook.arrowChart.float,
-					background: "-moz-linear-gradient(-45deg, rgba(255,255,255,1) 0%, rgba(241,241,241,1) 50%, rgba(225,225,225,1) 51%, rgba(246,246,246,1) 100%)"
-					//background :"-moz-linear-gradient(-45deg, rgba(226,226,226,1) 0%, rgba(219,219,219,1) 50%, rgba(209,209,209,1) 51%, rgba(254,254,254,1) 100%)"
+					background : halook.arrowChart.background
+				// background :"-moz-linear-gradient(-45deg,
+				// rgba(226,226,226,1) 0%, rgba(219,219,219,1)
+				// 50%, rgba(209,209,209,1) 51%,
+				// rgba(254,254,254,1) 100%)"
 				});
 				halook.arrowChartView = new ArrowChartView({
 					id : "arrowChart",
 					rootView : this
 				});
-				console.log("this.arrowView : " + this.arrowView);
+				// console.log("this.arrowView : " + this.arrowView);
 				// /////////////////////////////////////////////////////////////////
 				// graph用のdiv Tagの作成を行う。//////////////////////////////////////
 				$("#" + this.$el.attr("id")).append(
@@ -539,7 +634,7 @@ var ParentTmpView = wgp.AbstractView
 					height : halook.dygraphChart.height,
 					backgroundColor : halook.dygraphChart.backgroundColor,
 					float : halook.dygraphChart.float,
-					marginTop:5
+					marginTop : 5
 				});
 
 				this.dygraphView = new DygraphChartView({
@@ -565,69 +660,71 @@ var ParentTmpView = wgp.AbstractView
 
 			},
 			_changeToTask : function() {
-				console.log("change to task " + DisplayMode + " node");
+				// console.log("change to task " + DisplayMode + " node");
 
 				if (DisplayMode != "task" || halook.filterMode != null) {
 					DisplayMode = "task";
 					halook.taskDataForShow = halook.taskDataOriginal;
 					halook.filterMode = null;
 
-					halook.parentViewer._executeTaskSort(halook.taskDataForShow,
-							DisplayMode);
-					console.log("change to task " + this);
+					halook.parentViewer._executeTaskSort(
+							halook.taskDataForShow, DisplayMode);
+					// console.log("change to task " + this);
 					halook.arrowChartView.redraw("task");
 				}
 			},
 			_changeToNode : function() {
-				console.log("change to node " + DisplayMode + " task");
+				// console.log("change to node " + DisplayMode + " task");
 				if (DisplayMode != "node" || halook.filterMode != null) {
 					halook.taskDataForShow = halook.taskDataOriginal;
 					halook.filterMode = null;
 
 					DisplayMode = "node";
-					halook.parentViewer._executeTaskSort(halook.taskDataForShow,
-							DisplayMode);
-					console.log("change to node " + this);
+					halook.parentViewer._executeTaskSort(
+							halook.taskDataForShow, DisplayMode);
+					// console.log("change to node " + this);
 					halook.arrowChartView.redraw("node");
 				}
 			},
 			_changeToFail : function() {
-				if(halook.filterMode != "fail"){
+				if (halook.filterMode != "fail") {
 					halook.filterMode = "fail";
-					console.log("change to fail " + DisplayMode + " fail");
+					// console.log("change to fail " + DisplayMode + " fail");
 					halook.parentViewer._executeFilter();
-					console.log("change to fail " + this);
-				
+					// console.log("change to fail " + this);
+
 					halook.arrowChartView.redraw(DisplayMode);
 				}
 			},
 			_changeToKilled : function() {
-				if(halook.filterMode != "killed"){
+				if (halook.filterMode != "killed") {
 					halook.filterMode = "killed";
-					console.log("change to killed " + DisplayMode + " killed");
+					// console.log("change to killed " + DisplayMode + "
+					// killed");
 					halook.parentViewer._executeFilter();
-					console.log("change to killed " + this);
+					// console.log("change to killed " + this);
 					halook.arrowChartView.redraw(DisplayMode);
 				}
-			},	
+			},
 			addCollection : function(dataArray) {
 				if (dataArray != null) {
 					var instance = this;
-					console.log("dataArray :start"  );
+					// console.log("dataArray :start");
 					_.each(dataArray, function(data, index) {
 						var model = new instance.collection.model({
-							SubmitTime:data.SubmitTime,
-							StartTime:data.StartTime,
-							FinishTime:data.FinishTime,
-							JobID:data.JobID,
-							Status:data.Status,
-							Hostname:data.Hostname,
-							TaskAttemptID: data.TaskAttemptID,
-							Mapreduce: data.Mapreduce,
-							SimpleID: data.SimpleID,
-							attemptTime: data.attemptTime,
+							SubmitTime : data.SubmitTime,
+							StartTime : data.StartTime,
+							FinishTime : data.FinishTime,
+							JobID : data.JobID,
+							Status : data.Status,
+							Hostname : data.Hostname,
+							TaskAttemptID : data.TaskAttemptID,
+							Mapreduce : data.Mapreduce,
+							SimpleID : data.SimpleID,
+							attemptTime : data.attemptTime,
 						});
-						console.log(model + " modelwaaaaaaaa" + model.get("StartTime"));
+						// console.log(model + " modelwaaaaaaaa"
+						// + model.get("StartTime"));
 						instance.collection.add(model,
 								wgp.constants.BACKBONE_EVENT.SILENT);
 						instance.maxId++;
@@ -635,33 +732,35 @@ var ParentTmpView = wgp.AbstractView
 				}
 			},
 
-//			SubmitTime:null,
-//			StartTime:null,
-//			FinishTime:null,
-//			JobID:null,
-//			Status:null,
-//			Hostname:null,
-//			TaskAttemptID: null,
-//			Mapreduce: null,
-//			SimpleID: null,
-//			attemptTime: null,
+			// SubmitTime:null,
+			// StartTime:null,
+			// FinishTime:null,
+			// JobID:null,
+			// Status:null,
+			// Hostname:null,
+			// TaskAttemptID: null,
+			// Mapreduce: null,
+			// SimpleID: null,
+			// attemptTime: null,
 
 			// //////////描き加えるべき場所////////////////////////////////////////////
 			getData : function() {
 				var data = [];
 				_.each(this.collection.models, function(model, index) {
-					var modelData = {StartTime:model.get("StartTime"),
-							FinishTime:model.get("FinishTime"),
-							SubmitTime:model.get("SubmitTime"),
-							Status:model.get("Status"),
-							attemptTime:model.get("attemptTime"),
-							JobID:model.get("JobID"),
-							Hostname:model.get("Hostname"),
-							TaskAttemptID:model.get("TaskAttemptID"),
-							Mapreduce:model.get("Mapreduce"),
-							SimpleID:model.get("SimpleID"),
+					var modelData = {
+						StartTime : model.get("StartTime"),
+						FinishTime : model.get("FinishTime"),
+						SubmitTime : model.get("SubmitTime"),
+						Status : model.get("Status"),
+						attemptTime : model.get("attemptTime"),
+						JobID : model.get("JobID"),
+						Hostname : model.get("Hostname"),
+						TaskAttemptID : model.get("TaskAttemptID"),
+						Mapreduce : model.get("Mapreduce"),
+						SimpleID : model.get("SimpleID"),
 					};
-					//nsole.log("modelData: " + modelData.Status + modelData.JobID + modelData.TaskAttemptID);
+					// nsole.log("modelData: " + modelData.Status +
+					// modelData.JobID + modelData.TaskAttemptID);
 					data.push(modelData);
 				});
 
@@ -669,35 +768,49 @@ var ParentTmpView = wgp.AbstractView
 			},
 			_executeFilter : function(array, mode) {
 				var resultCollection;
-				if(halook.filterMode == "fail"){
-					resultCollection = halook.parentViewer.collection.where({Status:"FAIL"});
-				}else if(halook.filterMode == "killed"){
-					resultCollection = halook.parentViewer.collection.where({Status:"KILLED"});	
+				if (halook.filterMode == "fail") {
+					resultCollection = halook.parentViewer.collection.where({
+						Status : "FAIL"
+					});
+				} else if (halook.filterMode == "killed") {
+					resultCollection = halook.parentViewer.collection.where({
+						Status : "KILLED"
+					});
 				}
-				
-				
+
 				var data = [];
-				for(var i = 0; i < resultCollection.length; i ++) {
-					var modelData = {StartTime:resultCollection[i].get("StartTime"),
-							FinishTime:resultCollection[i].get("FinishTime"),
-							SubmitTime:resultCollection[i].get("SubmitTime"),
-							Status:resultCollection[i].get("Status"),
-							attemptTime:resultCollection[i].get("attemptTime"),
-							JobID:resultCollection[i].get("JobID"),
-							Hostname:resultCollection[i].get("Hostname"),
-							TaskAttemptID:resultCollection[i].get("TaskAttemptID"),
-							Mapreduce:resultCollection[i].get("Mapreduce"),
-							SimpleID:resultCollection[i].get("SimpleID"),
+				for ( var i = 0; i < resultCollection.length; i++) {
+					var modelData = {
+						StartTime : resultCollection[i].get("StartTime"),
+						FinishTime : resultCollection[i].get("FinishTime"),
+						SubmitTime : resultCollection[i].get("SubmitTime"),
+						Status : resultCollection[i].get("Status"),
+						attemptTime : resultCollection[i].get("attemptTime"),
+						JobID : resultCollection[i].get("JobID"),
+						Hostname : resultCollection[i].get("Hostname"),
+						TaskAttemptID : resultCollection[i]
+								.get("TaskAttemptID"),
+						Mapreduce : resultCollection[i].get("Mapreduce"),
+						SimpleID : resultCollection[i].get("SimpleID"),
 					};
-					//nsole.log("modelData: " + modelData.Status + modelData.JobID + modelData.TaskAttemptID);
+					// nsole.log("modelData: " + modelData.Status +
+					// modelData.JobID + modelData.TaskAttemptID);
 					data.push(modelData);
-				};
-				
-				
-				
+				}
+				;
+
 				halook.taskDataForShow = data;
 
 			},
+			getTermData : function() {
+				// console.log("*****************************************************");
+				// console.log(this);
+				// console.log("getTermData "
+				// + this.collection.pop().get("StartData"));
+			},
+			destroy : function() {
+				// delete items
+			}
 
 		}
 

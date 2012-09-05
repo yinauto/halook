@@ -16,6 +16,24 @@ halook.arrowChart.stringHeightOffset = -10;
 // IDと登場回数を記憶する辞書
 halook.arrowChart.idCounter = {};
 
+halook.arrowChart.defaultIndexInCell = 1;
+halook.arrowChart.defaultTotalInCell = 1;
+halook.arrowChart.TableLineColor = "#777777";
+halook.arrowChart.CellLineColor = "black";
+halook.arrowChart.cellTitleFontSize = 20;
+halook.arrowChart.cellTitleFontSizeForNode = 15;
+
+halook.arrowChart.CellTitleObjectIDs = 40000;
+halook.arrowChart.CellTitleHeight = 90;
+halook.arrowChart.CellTitlePointX = 5;
+halook.arrowChart.CellLineObjectID = 10000;
+
+// detail 表示用のelementを保存しておく箱
+halook.arrowChart.detailInfoElement = null;
+
+halook.arrowChart.InfoElementObjectID = 50000;
+halook.arrowChart.infoElementFontSize = 15;
+
 // //////////////////////////////////////アロー関数群////////////////////////////////////////////////////////////
 
 // アローチャート座標をチャート全体座標系に直す。
@@ -31,48 +49,29 @@ function getChartPosition(x, y) {
 var ArrowChartView = wgp.AbstractView
 		.extend({
 			initialize : function() {
+				var jobColor;
+
 				this.viewType = wgp.constants.VIEW_TYPE.VIEW;
 				this.collection = new arrowModelCollection();
 				this.attributes = {};
 				this.registerCollectionEvent();
+
 				this.paper = new Raphael(document.getElementById(this.$el
 						.attr("id")), this.width, this.height);
 				this.paper.setSize(halook.arrowChart.paperWidth,
 						halook.arrowChart.paperHeight);
-				var sd = new Date();
-				var fd = new Date();
-				var subd = new Date();
-				sd.setTime(halook.jobDataForShow.StartTime);
-				fd.setTime(halook.jobDataForShow.FinishTime);
-				subd.setTime(halook.jobDataForShow.SubmitTime);
-				var jobColor;
-				if (halook.jobDataForShow.Status == wgp.constants.JOB_STATE.SUCCESS) {
-					jobColor = "#00FF00"
-				} else if (halook.jobDataForShow.Status == wgp.constants.JOB_STATE.FAIL) {
-					jobColor = "#FF0000"
-				} else if (halook.jobDataForShow.Status == wgp.constants.JOB_STATE.KILLED) {
-					jobColor = "#FF0000"
-				} else if (halook.jobDataForShow.Status == wgp.constants.JOB_STATE.RUNNING) {
-					jobColor = "#0000FF"
-				}
 
-				$("#jobInfoSpace").html(
-						"<p><font size='6' face='Comic Sans MS'><b>" + halook.jobDataForShow.JobID
-								+ " : </b></font>" + "<font size='6' color='"
-								+ jobColor + "'><b>" + halook.jobDataForShow.Status
-								+ "</b></font></br> " + "<font size='4'>("
-								+ halook.jobDataForShow.JobName + ")</font></br>"
-								+ " <font  face='Comic Sans MS'> " + sd.toLocaleString() + "  -  "
-								+ fd.toLocaleString() + "( SUBMIT_TIME:"
-								+ subd.toLocaleString() + " )</font></br></p>");
-				$("#jobInfoSpace p").css({marginLeft:10, marginTop:0});
-				
-				
+				this._initInfoElement();
+
 				// /複数会登場するIDの記憶と番号登録
-				for ( var i = 0; i < halook.taskDataForShow.length; i++) {
-					var idstring = halook.taskDataForShow[i].TaskAttemptID;
-					var idArray = idstring.split('_');
-					var rowCounter = 0;
+				var taskDataShowLength = halook.taskDataForShow.length;
+				var idstring;
+				var idArray;
+				var rowCounter;
+				for ( var i = 0; i < taskDataShowLength; i++) {
+					idstring = halook.taskDataForShow[i].TaskAttemptID;
+					idArray = idstring.split('_');
+					rowCounter = 0;
 					idArray[5] = idArray[5].replace(/0/g, '');
 					if (idArray[5] != 0) {
 						if (halook.arrowChart.idCounter[(idArray[3] + "_" + idArray[4])] == undefined)
@@ -81,10 +80,13 @@ var ArrowChartView = wgp.AbstractView
 							halook.arrowChart.idCounter[(idArray[3] + "_" + idArray[4])] = idArray[5];
 					}
 				}
-				
-				//基本となるテーブルの線を描く
+
+				// JobInfoの表示内容の確認
+				this._decideJobInfo();
+
+				// 基本となるテーブルの線を描く
 				this._drawTableLines();
-				
+
 				// 矢印たちと×印の絵画の作成
 				this._drawArrowAndError();
 
@@ -103,24 +105,25 @@ var ArrowChartView = wgp.AbstractView
 					this.height = realTag.height();
 				}
 
-				console.log('called initialize');
+				// console.log('called initialize');
 			},
 			render : function() {
-				console.log('call render');
+				// console.log('call render');
 			},
 			onAdd : function(element) {
-				console.log('call onAdd');
+				// console.log('call onAdd');
 			},
 			onChange : function(element) {
-				console.log('called changeModel');
+				// console.log('called changeModel');
 			},
 			onRemove : function(element) {
-				console.log('called removeModel');
+				// console.log('called removeModel');
 			},
 			_drawArrowAndError : function(element) {
 				var rowCounter = 0;
 
-				for ( var i = 0; i < halook.taskDataForShow.length; i++) {
+				var taskShowLength = halook.taskDataForShow.length;
+				for ( var i = 0; i < taskShowLength; i++) {
 					var data = halook.taskDataForShow[i];
 					var modelInfo;
 					var indexInCell = 1;
@@ -140,14 +143,16 @@ var ArrowChartView = wgp.AbstractView
 						modelInfo = this._calcArrowLengthAndStartPos(
 								data.StartTime, data.FinishTime, indexInCell,
 								totalInCell, rowCounter);
-						console.log("index info : " + totalInCell + " "
-								+ indexInCell + " " + data.Mapreduce
-								+ data.SimpleID + " counter " + rowCounter
-								+ "  " + data.attemptTime + " status "
-								+ data.Status);
+						// console.log("index info : " + totalInCell + " "
+						// + indexInCell + " " + data.Mapreduce
+						// + data.SimpleID + " counter " + rowCounter
+						// + " " + data.attemptTime + " status "
+						// + data.Status);
 					} else if (DisplayMode == "node") {
 						modelInfo = this._calcArrowLengthAndStartPos(
-								data.StartTime, data.FinishTime, 1, 1,
+								data.StartTime, data.FinishTime,
+								halook.arrowChart.defaultIndexInCell,
+								halook.arrowChart.defaultTotalInCell,
 								rowCounter);
 					}
 
@@ -161,14 +166,15 @@ var ArrowChartView = wgp.AbstractView
 					});
 
 					// ///statusがエラーの場合の処理はこれも行う
-					console.log(data.Mapreduce
-									+ "_"
-									+ data.SimpleID
-									+ "  attempt "
-									+ data.attemptTime
-									+ " "
-									+ halook.parentView.taskAttemptInfoDictionary[data.Mapreduce
-											+ "_" + data.SimpleID]);
+					// console.log(data.Mapreduce
+					// + "_"
+					// + data.SimpleID
+					// + " attempt "
+					// + data.attemptTime
+					// + " "
+					// +
+					// halook.parentView.taskAttemptInfoDictionary[data.Mapreduce
+					// + "_" + data.SimpleID]);
 					if (data.Status == "FAIL" || data.Status == "KILLED") {
 						var errorInfo;
 						if (DisplayMode == "task") {
@@ -188,12 +194,17 @@ var ArrowChartView = wgp.AbstractView
 							pointX : errorInfo.posX,
 							pointY : errorInfo.posY
 						});
-						if(data.Status == "FAIL")
-							stateString = "fail";
-						else if(data.Status == "KILLED")
-							stateString = "killed";
- 						var errorStateString = errorStateString;
- 						stateString = data.Mapreduce + stateString;
+						stateString = wgp.constants.STATE[data.Status];
+						// if (data.Status == "FAIL")
+						// stateString = "fail";
+						// else if (data.Status == "KILLED")
+						// stateString = "killed";
+						var errorStateString = stateString;
+						stateString = data.Mapreduce + stateString;
+
+						console.log("state string : " + stateString
+								+ " error state " + errorStateString + " "
+								+ data.SimpleID);
 
 						new wgp.ErrorStateElementView({
 							model : modelDataForError,
@@ -203,22 +214,15 @@ var ArrowChartView = wgp.AbstractView
 						});
 
 					} else if (data.Status == "RUNNING") {
-						console.log("these are running");
-						if (data.Mapreduce == "m") {
-							stateString = "mrun";
-						} else if (data.Mapreduce == "r") {
-							stateString = "rrun";
-						}
+						// console.log("these are running");
+						stateString = "run";
+						stateString = data.Mapreduce + stateString;
 					} else {
-						if (data.Mapreduce == 'm') {
-
-							stateString = "mnormal";
-						} else if (data.Mapreduce == 'r') {
-							stateString = "rnormal";
-						}
+						stateString = "normal";
+						stateString = data.Mapreduce + stateString;
 					}
-					console.log("state " + stateString + " " + data.Mapreduce
-							+ data.SimpleID + " " + (data.attemptTime - 1));
+					// console.log("state " + stateString + " " + data.Mapreduce
+					// + data.SimpleID + " " + (data.attemptTime - 1));
 					new wgp.ArrowStateElementView({
 						model : modelDataForArrow,
 						paper : this.paper,
@@ -231,9 +235,7 @@ var ArrowChartView = wgp.AbstractView
 							&& (i != halook.taskDataForShow.length - 1 && halook.taskDataForShow[i + 1].attemptTime != 1)) {
 						rowCounter--;
 					}
-
 				}
-
 			},
 			_calcErrorLengthAndStartPos : function(eventTime, trialTime,
 					allTrialTime, rowNum) {
@@ -247,7 +249,6 @@ var ArrowChartView = wgp.AbstractView
 				y = halook.arrowChart.cellHeight * trialTime * 1.0
 						/ (1 + allTrialTime) + rowNum
 						* halook.arrowChart.cellHeight;
-				// console.log("x = " + x + " y = " + y);
 
 				return {
 					posX : x,
@@ -266,12 +267,6 @@ var ArrowChartView = wgp.AbstractView
 						+ halook.arrowChart.arrowChartWidth
 						* (startTime - halook.parentView.minGraphTime) * 1.0
 						/ halook.parentView.intervalTime;
-				// console.log("startLineX: " + startLineX + " arrowwidth " +
-				// halook.arrowChart.arrowChartWidth
-				// + " intervalTime " + intervalTime + " startTime " + startTime
-				// + " finishTime " + finishTime + " halook.parentView.mingraph
-				// " +
-				// halook.parentView.minGraphTime);
 				// スタートy位置
 				y = halook.arrowChart.cellHeight * trialTime
 						/ (1 + allTrialTime) + rowNum
@@ -284,36 +279,36 @@ var ArrowChartView = wgp.AbstractView
 				};
 			},
 			_drawCellTitle : function() {
+				var labelString
+				var textRowCounter = 0;
+				var data;
+				var modelDataForCellTitle;
+				var tmpLabelArray;
 				if (DisplayMode == "task") {
-					var textRowCounter = 0;
 					for ( var i = 0; i < halook.taskDataForShow.length; i++) {
-						var data = halook.taskDataForShow[i];
-						console.log("now i am " + data.attemptTime + " "
-								+ data.Mapreduce + "_" + data.SimpleID);
-						//samokeDatasがソートされていることを前提に、ひとつ前のものと名前が同じなら、パスする。
+						data = halook.taskDataForShow[i];
+						// samokeDatasがソートされていることを前提に、ひとつ前のものと名前が同じなら、パスする。
 						if (textRowCounter != 0
 								&& halook.taskDataForShow[i - 1].Mapreduce == data.Mapreduce
 								&& halook.taskDataForShow[i - 1].SimpleID == data.SimpleID) {
 							// rowCounter--;
 							continue;
 						} else {
-							var modelData5 = new wgp.MapElement({
-								objectId : 40000 + i,
+							modelDataForCellTitle = new wgp.MapElement({
+								objectId : halook.arrowChart.CellTitleObjectIDs
+										+ i,
 								objectName : null,
 								height : 0,
-								width : 90,
-								pointX : 5,
+								width : halook.arrowChart.CellTitleHeight,
+								pointX : halook.arrowChart.CellTitlePointX,
 								pointY : halook.arrowChart.cellHeight * 1.0 / 2
 										+ textRowCounter
-										* halook.arrowChart.cellHeight, // +
-								// stringHeightOffset,
+										* halook.arrowChart.cellHeight,
 								text : data.Mapreduce + "_" + data.SimpleID,
-								fontSize : 20
+								fontSize : halook.arrowChart.cellTitleFontSize
 							});
-							console.log("-----------" + data.Mapreduce + "_"
-									+ data.SimpleID);
 							new wgp.TextAreaStateElementView({
-								model : modelData5,
+								model : modelDataForCellTitle,
 								paper : this.paper,
 								state : "merror"
 							});
@@ -321,88 +316,151 @@ var ArrowChartView = wgp.AbstractView
 						}
 					}
 				} else if (DisplayMode == "node") {
-
 					for ( var i = 0; i < halook.taskDataForShow.length; i++) {
-						var labelString = halook.taskDataForShow[i].Hostname;
-						var tmpLabelArray = labelString.split('/');
+						labelString = halook.taskDataForShow[i].Hostname;
+						tmpLabelArray = labelString.split('/');
 						labelString = tmpLabelArray.join('\n');
-						console.log(labelString);
-						var modelData5 = new wgp.MapElement({
-							objectId : 40000 + i,
-							objectName : null,
-							height : 0,
-							width : 90,
-							pointX : 5,
-							pointY : halook.arrowChart.cellHeight * 1.0 / 2 + i
-									* halook.arrowChart.cellHeight,// +
-							text : labelString,
-							fontSize : 15
-						});
+						// console.log(labelString);
+						modelDataForCellTitle = new wgp.MapElement(
+								{
+									objectId : halook.arrowChart.CellTitleObjectIDs
+											+ i,
+									objectName : null,
+									height : 0,
+									width : halook.arrowChart.CellTitleHeight,
+									pointX : halook.arrowChart.CellTitlePointX,
+									pointY : halook.arrowChart.cellHeight * 1.0
+											/ 2 + i
+											* halook.arrowChart.cellHeight,// +
+									text : labelString,
+									fontSize : halook.arrowChart.cellTitleFontSizeForNode
+								});
 						new wgp.TextAreaStateElementView({
-							model : modelData5,
+							model : modelDataForCellTitle,
 							paper : this.paper,
 							state : "merror"
 						});
 					}
 				}
 				;
-			},_drawTableLines:function(){
+			},
+			_drawTableLines : function() {
 				// 縦線の表示 端から100px
-				var modelData5 = new wgp.MapElement({
+				var modelDataForTableLines = new wgp.MapElement({
 					objectId : 0,
 					objectName : null,
 					height : halook.arrowChart.paperHeight,
 					width : 0,
 					pointX : halook.arrowChart.startLineX,
 					pointY : 0,
-					color : "#777777"
+					color : halook.arrowChart.TableLineColor
 				});
 				new wgp.LineStateElementView({
-					model : modelData5,
+					model : modelDataForTableLines,
 					paper : this.paper,
 					state : "rerror"
 				});
-				
+
+				this._drawCellLine();
+
+			},
+			_drawCellLine : function() {
 				// /セルの線引きの作成
 				var cellCounter = Math.floor(halook.arrowChart.paperHeight
 						/ halook.arrowChart.cellHeight);
+				var modelDataForCellLine;
 				// console.log(cellCounter + "aaa");
 				for ( var k = 0; k < cellCounter + 1; k++) {
 					// console.log(i *halook.arrowChart.cellHeight + " cell
 					// height");
 
-					var modelData6 = new wgp.MapElement({
-						objectId : k + 10000,
+					modelDataForCellLine = new wgp.MapElement({
+						objectId : k + halook.arrowChart.CellLineObjectID,
 						objectName : null,
 						height : 0,
 						width : halook.arrowChart.paperWidth,
 						pointX : 0,
 						pointY : k * halook.arrowChart.cellHeight,
-						color : "black",
+						color : halook.arrowChart.CellLineColor,
 						strokeWidth : 2
 					});
 					new wgp.LineStateElementView({
-						model : modelData6,
+						model : modelDataForCellLine,
 						paper : this.paper,
 						state : "rerror"
 					});
 				}
+			},
+			_decideJobInfo : function() {
+				var jobColor;
+				var sd = new Date();
+				var fd = new Date();
+				var subd = new Date();
 
+				sd.setTime(halook.jobDataForShow.StartTime);
+				fd.setTime(halook.jobDataForShow.FinishTime);
+				subd.setTime(halook.jobDataForShow.SubmitTime);
+
+				if (halook.jobDataForShow.Status == wgp.constants.JOB_STATE.SUCCESS) {
+					jobColor = wgp.constants.STATE_COLOR[wgp.constants.STATE.SUCCESS];
+				} else if (halook.jobDataForShow.Status == wgp.constants.JOB_STATE.FAIL) {
+					jobColor = wgp.constants.STATE_COLOR[wgp.constants.STATE.FAIL];
+				} else if (halook.jobDataForShow.Status == wgp.constants.JOB_STATE.KILLED) {
+					jobColor = wgp.constants.STATE_COLOR[wgp.constants.STATE.KILLED];
+				} else if (halook.jobDataForShow.Status == wgp.constants.JOB_STATE.RUNNING) {
+					jobColor = wgp.constants.STATE_COLOR[wgp.constants.STATE.RUNNING];
+				}
+
+				$("#jobInfoSpace").html(
+						"<p><font size='6' face='Comic Sans MS'><b>"
+								+ halook.jobDataForShow.JobID
+								+ " : </b></font>" + "<font size='6' color='"
+								+ jobColor + "'><b>"
+								+ halook.jobDataForShow.Status
+								+ "</b></font></br> " + "<font size='4'>("
+								+ halook.jobDataForShow.JobName
+								+ ")</font></br>"
+								+ " <font  face='Comic Sans MS'> "
+								+ sd.toLocaleString() + "  -  "
+								+ fd.toLocaleString() + "( SUBMIT_TIME:"
+								+ subd.toLocaleString() + " )</font></br></p>");
+				$("#jobInfoSpace p").css({
+					marginLeft : 10,
+					marginTop : 0
+				});
 
 			},
-			
-			redraw:function(mode){
+			_initInfoElement : function() {
+
+				var modelDataForInfoElement = new wgp.MapElement({
+					objectId : halook.arrowChart.InfoElementObjectID,
+					objectName : null,
+					height : 0,
+					width : 0,
+					pointX : 0,
+					pointY : 0,
+					text : "",
+					fontSize : halook.arrowChart.infoElementFontSize
+					});
+				new wgp.TextAreaStateElementView({
+					model : modelDataForInfoElement,
+					paper : this.paper,
+					state : "rerror"
+				});
+				
+			},
+
+			redraw : function(mode) {
 				this.paper.clear();
 				DisplayMode = mode;
-				//基本となるテーブルの線を描く
+				// 基本となるテーブルの線を描く
 				this._drawTableLines();
-				
+
 				// 矢印たちと×印の絵画の作成
 				this._drawArrowAndError();
 
 				// textAreaの描画を行う。
 				this._drawCellTitle();
 			}
-			
 
 		});

@@ -8,6 +8,9 @@ function plusMinus(num) {
 
 }
 
+halook.errorState = {};
+halook.errorState.rate = 0.5;
+
 function addMouseover(errorElement) {
 	if ($.isArray(errorElement)) {
 		for ( var i = 0; i < errorElement.length; i++) {
@@ -31,7 +34,7 @@ wgp.ErrorStateElementView = Backbone.View.extend({
 		this.model.set({
 			state : argument.state
 		});
-		console.log(argument.state);
+//		console.log(argument.state);
 
 		this._paper = argument.paper;
 		if (this._paper == null) {
@@ -41,7 +44,7 @@ wgp.ErrorStateElementView = Backbone.View.extend({
 		this.taskInfo = argument.info;
 		this.id = this.model.get("objectId");
 		this.render();
-		console.log("errorState is called");
+//		console.log("errorState is called");
 	},
 	render : function() {
 		var color = this.getStateColor();
@@ -55,12 +58,17 @@ wgp.ErrorStateElementView = Backbone.View.extend({
 		});
 
 		if (this.model.attributes.width == null) {
-			this.model.attributes.width = 20;
+			this.model.attributes.width = 10;
 		}
 		if (this.model.attributes.height == null) {
-			this.model.attributes.height = 20;
+			this.model.attributes.height = 10;
 		}
+		
+		
+		this.model.attributes.width = this.model.attributes.width * halook.errorState.rate;
+		this.model.attributes.height = this.model.attributes.height * halook.errorState.rate;
 
+		
 		var lengthOfArrow = Math.sqrt(this.model.attributes.width
 				* this.model.attributes.width + this.model.attributes.height
 				* this.model.attributes.height);
@@ -112,10 +120,10 @@ wgp.ErrorStateElementView = Backbone.View.extend({
 
 		var anim2 = Raphael.animation({
 			"stroke-opacity" : 1
-		}, 1500, "easeIn",function(){console.log(anim1);this.animate(anim1);});
+		}, 1500, "easeIn",function(){this.animate(anim1);});
 		var anim1 = Raphael.animation({
 			"stroke-opacity" : 0
-		}, 1500, "easeOut",function(){console.log(anim2);this.animate(anim2);});
+		}, 1500, "easeOut",function(){this.animate(anim2);});
 		
 		this.element[0].object.animate(anim1);
 		this.element[1].object.animate(anim1);
