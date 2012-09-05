@@ -8,22 +8,21 @@ function plusMinus(num) {
 
 }
 
-
-function addMouseover(errorElement){
-	if($.isArray(errorElement)){
-		for(var i = 0;i < errorElement.length;i++){
-			errorElement[i].object.mouseover(function(){
-	    	});
+function addMouseover(errorElement) {
+	if ($.isArray(errorElement)) {
+		for ( var i = 0; i < errorElement.length; i++) {
+			errorElement[i].object.mouseover(function() {
+			});
 		}
-	}
-	else{
-		errorElement.object.mouseover(function(){
-    	});
+	} else {
+		errorElement.object.mouseover(function() {
+		});
 	}
 }
 
-
 var errorXOffset = 5;
+
+var tmpElement;
 
 wgp.ErrorStateElementView = Backbone.View.extend({
 	// /stateを渡す。NORMAL or ERROR or WARN
@@ -110,6 +109,19 @@ wgp.ErrorStateElementView = Backbone.View.extend({
 		this.element = [];
 		this.element[0] = new line(rightDownData.attributes, this._paper);
 		this.element[1] = new line(rightUpData.attributes, this._paper);
+
+		var anim2 = Raphael.animation({
+			"stroke-opacity" : 1
+		}, 1500, "easeIn",function(){console.log(anim1);this.animate(anim1);});
+		var anim1 = Raphael.animation({
+			"stroke-opacity" : 0
+		}, 1500, "easeOut",function(){console.log(anim2);this.animate(anim2);});
+		
+		this.element[0].object.animate(anim1);
+		this.element[1].object.animate(anim1);
+		
+		//this.element[1].object.animate(anim1);
+
 		addMouseover(this.element);
 	},
 	update : function(model) {

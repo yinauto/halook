@@ -41,7 +41,7 @@ halook.taskInfoSpace.float = "left";
 
 halook.arrowChart = {};
 halook.arrowChart.width = "750px";
-halook.arrowChart.height = "350px";
+halook.arrowChart.height = "320px";
 halook.arrowChart.overflow = "scroll";
 halook.arrowChart.overflowX = "hidden";
 halook.arrowChart.backgroundColor = "#EEEEEE";
@@ -258,6 +258,7 @@ var ParentTmpView = wgp.AbstractView
 				this.maxId = 0;
 				var realTag = $("#" + this.$el.attr("id"));
 
+
 				
 				halook.parentViewer = this;
 				// //////////////////最初のデータの処理を行う。//////////////////////////////////////////////////////////////////////
@@ -290,9 +291,9 @@ var ParentTmpView = wgp.AbstractView
 				var datas = this.getData();
 				console.log("data dayo " + datas.length);
 				var sampleModel = this.collection.pop();
-				alert(sampleModel.get("Status"));
+//				alert(sampleModel.get("Status"));
 				var array = this.collection.where({Status:"SUCCESS"});
-				alert(array[0].get("TaskAttemptID") +" "+ array[1].get("TaskAttemptID") +" "+ array[2].get("TaskAttemptID") + "  kikai");
+//				alert(array[0].get("TaskAttemptID") +" "+ array[1].get("TaskAttemptID") +" "+ array[2].get("TaskAttemptID") + "  kikai");
 				
 				if (this.width == null) {
 					this.width = realTag.width();
@@ -521,7 +522,8 @@ var ParentTmpView = wgp.AbstractView
 					overflowX : halook.arrowChart.overflowX,
 					marginTop:5,
 					float : halook.arrowChart.float,
-					background :"-moz-linear-gradient(-45deg, rgba(76,76,76,1) 0%, rgba(89,89,89,1) 12%, rgba(102,102,102,1) 25%, rgba(71,71,71,1) 39%, rgba(44,44,44,1) 50%, rgba(17,17,17,1) 60%, rgba(43,43,43,1) 76%, rgba(28,28,28,1) 91%, rgba(19,19,19,1) 100%)"
+					background: "-moz-linear-gradient(-45deg, rgba(255,255,255,1) 0%, rgba(241,241,241,1) 50%, rgba(225,225,225,1) 51%, rgba(246,246,246,1) 100%)"
+					//background :"-moz-linear-gradient(-45deg, rgba(226,226,226,1) 0%, rgba(219,219,219,1) 50%, rgba(209,209,209,1) 51%, rgba(254,254,254,1) 100%)"
 				});
 				halook.arrowChartView = new ArrowChartView({
 					id : "arrowChart",

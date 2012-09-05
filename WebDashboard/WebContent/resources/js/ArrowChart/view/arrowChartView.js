@@ -57,14 +57,14 @@ var ArrowChartView = wgp.AbstractView
 				}
 
 				$("#jobInfoSpace").html(
-						"<p><font size='6'><b>" + halook.jobDataForShow.JobID
+						"<p><font size='6' face='Comic Sans MS'><b>" + halook.jobDataForShow.JobID
 								+ " : </b></font>" + "<font size='6' color='"
 								+ jobColor + "'><b>" + halook.jobDataForShow.Status
-								+ "</b></font></br> " + "<font size='5'>("
+								+ "</b></font></br> " + "<font size='4'>("
 								+ halook.jobDataForShow.JobName + ")</font></br>"
-								+ "  " + sd.toLocaleString() + "  -  "
+								+ " <font  face='Comic Sans MS'> " + sd.toLocaleString() + "  -  "
 								+ fd.toLocaleString() + "( SUBMIT_TIME:"
-								+ subd.toLocaleString() + " )</br></p>");
+								+ subd.toLocaleString() + " )</font></br></p>");
 				$("#jobInfoSpace p").css({marginLeft:10, marginTop:0});
 				
 				

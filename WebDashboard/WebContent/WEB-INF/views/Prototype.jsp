@@ -7,6 +7,7 @@
 	<script type="text/javascript" src=<%=request.getContextPath() %>/resources/js/ParentView/view/parentTmpView.js></script>
 	<script type="text/javascript" src=<%=request.getContextPath() %>/resources/js/ParentView/model/parentTmpModel.js></script>
 	<script type="text/javascript" src=<%=request.getContextPath() %>/resources/js/ParentView/mock/parentTmpDataMock.js></script>
+	<script type="text/javascript" src=<%=request.getContextPath() %>/resources/js/common/map/customtriangle.js></script>
     <script type="text/javascript" src=<%=request.getContextPath() %>/resources/js/ArrowChart/view/dygraphChartView.js></script>
 	<script type="text/javascript" src=<%=request.getContextPath() %>/resources/js/ArrowChart/model/dygraphChartModel.js></script>
 	<script type="text/javascript" src=<%=request.getContextPath() %>/resources/js/ArrowChart/mock/dygraphChartDataMock.js></script>
