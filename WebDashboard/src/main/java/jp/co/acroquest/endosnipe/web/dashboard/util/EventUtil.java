@@ -14,17 +14,17 @@ package jp.co.acroquest.endosnipe.web.dashboard.util;
 
 import java.util.List;
 
+import jp.co.acroquest.endosnipe.common.Constants;
 import jp.co.acroquest.endosnipe.common.logger.ENdoSnipeLogger;
 import jp.co.acroquest.endosnipe.common.util.ResourceDataUtil;
-import jp.co.acroquest.endosnipe.communicator.entity.MeasurementConstants;
 import jp.co.acroquest.endosnipe.data.dto.MeasurementValueDto;
 import jp.co.acroquest.endosnipe.web.dashboard.constants.LogMessageCodes;
 import jp.co.acroquest.endosnipe.web.dashboard.service.processor.TermMeasurementDataProcessor;
 
 /**
  * イベント処理に関するユーティリティクラスです。
+ * 
  * @author fujii
- *
  */
 public class EventUtil
 {
@@ -172,39 +172,38 @@ public class EventUtil
     /**
      * 値の期間取得時において物理メモリ使用量を空きメモリ量から計算する処理。
      * 
-     * @param trueMeasurementType 測定項目
+     * @param trueMeasurementItemName 測定項目
      * @param measurementValueList 最大メモリ量
      * @param sysPhysicMemFreeDtoList 空きメモリ使用量
      * @return 物理メモリ使用量
      */
     public static List<MeasurementValueDto> confirmMeasurementValueList(
-            Integer trueMeasurementType, List<MeasurementValueDto> measurementValueList,
+            String trueMeasurementItemName, List<MeasurementValueDto> measurementValueList,
             List<MeasurementValueDto> sysPhysicMemFreeDtoList)
     {
         for (int index = 0; index < measurementValueList.size(); index++)
         {
             MeasurementValueDto tmpMeasurementValueDto = measurementValueList.get(index);
-            tmpMeasurementValueDto.measurementType = trueMeasurementType;
             //使用物理メモリを計算。
-            if (trueMeasurementType == MeasurementConstants.TYPE_SYS_PHYSICALMEM_USED)
+            if (trueMeasurementItemName.equals(Constants.ITEMNAME_SYSTEM_MEMORY_PHYSICAL_USED))
             {
                 MeasurementValueDto sysPhysicMemUsedDto = sysPhysicMemFreeDtoList.get(index);
-                tmpMeasurementValueDto.value =
-                                               EventUtil.makeUsedPhysicalMemoryData(
-                                                                          tmpMeasurementValueDto.value.longValue(),
-                                                                          sysPhysicMemUsedDto.value.longValue());
+                tmpMeasurementValueDto.value = String.valueOf(
+                    EventUtil.makeUsedPhysicalMemoryData(
+                        Long.valueOf(tmpMeasurementValueDto.value).longValue(),
+                        Long.valueOf(sysPhysicMemUsedDto.value).longValue()));
             }
 
-            if (TermMeasurementDataProcessor.MEASUREMENT_TYPE_DISPLAY_NAME.containsKey(trueMeasurementType))
+            if (TermMeasurementDataProcessor.MEASUREMENT_TYPE_DISPLAY_NAME.containsKey(trueMeasurementItemName))
             {
                 tmpMeasurementValueDto.measurementTypeDisplayName =
-                                                                    TermMeasurementDataProcessor.MEASUREMENT_TYPE_DISPLAY_NAME.get(trueMeasurementType);
+                    TermMeasurementDataProcessor.MEASUREMENT_TYPE_DISPLAY_NAME.get(trueMeasurementItemName);
             }
 
-            if (TermMeasurementDataProcessor.MEASUREMENT_TYPE_ITEM_NAME.containsKey(trueMeasurementType))
+            if (TermMeasurementDataProcessor.MEASUREMENT_TYPE_ITEM_NAME.containsKey(trueMeasurementItemName))
             {
                 tmpMeasurementValueDto.measurementTypeItemName =
-                                                                 TermMeasurementDataProcessor.MEASUREMENT_TYPE_ITEM_NAME.get(trueMeasurementType);
+                    TermMeasurementDataProcessor.MEASUREMENT_TYPE_ITEM_NAME.get(trueMeasurementItemName);
             }
         }
         return measurementValueList;
@@ -234,5 +233,4 @@ public class EventUtil
         long systemPhysicalUsedValue = systemPhysicalMaxValue - systemPhysicalFreeValue;
         return systemPhysicalUsedValue;
     }
-
 }

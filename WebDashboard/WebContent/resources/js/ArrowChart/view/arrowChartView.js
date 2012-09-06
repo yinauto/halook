@@ -61,7 +61,6 @@ var ArrowChartView = wgp.AbstractView
 				this.paper.setSize(halook.arrowChart.paperWidth,
 						halook.arrowChart.paperHeight);
 
-				this._initInfoElement();
 
 				// /複数会登場するIDの記憶と番号登録
 				var taskDataShowLength = halook.taskDataForShow.length;
@@ -93,6 +92,10 @@ var ArrowChartView = wgp.AbstractView
 				// textAreaの描画を行う。
 				this._drawCellTitle();
 
+				//taskInfo表示用
+				this._initInfoElement();
+				
+				
 				// /////グラフのtaskのカウントを実行
 
 				this.maxId = 0;
@@ -205,13 +208,14 @@ var ArrowChartView = wgp.AbstractView
 						console.log("state string : " + stateString
 								+ " error state " + errorStateString + " "
 								+ data.SimpleID);
-
-						new wgp.ErrorStateElementView({
-							model : modelDataForError,
-							paper : this.paper,
-							state : errorStateString,
-							info : data
-						});
+						if (data.Status == "FAIL") {
+							new wgp.ErrorStateElementView({
+								model : modelDataForError,
+								paper : this.paper,
+								state : errorStateString,
+								info : data
+							});
+						}
 
 					} else if (data.Status == "RUNNING") {
 						// console.log("these are running");
@@ -437,17 +441,17 @@ var ArrowChartView = wgp.AbstractView
 					objectName : null,
 					height : 0,
 					width : 0,
-					pointX : 0,
-					pointY : 0,
+					pointX : 100,
+					pointY : 100,
 					text : "",
 					fontSize : halook.arrowChart.infoElementFontSize
-					});
-				new wgp.TextAreaStateElementView({
+				});
+				new wgp.InfoTextAreaStateElementView({
 					model : modelDataForInfoElement,
 					paper : this.paper,
 					state : "rerror"
 				});
-				
+
 			},
 
 			redraw : function(mode) {

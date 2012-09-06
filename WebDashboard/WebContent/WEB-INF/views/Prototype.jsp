@@ -25,6 +25,7 @@
     <script type="text/javascript" src=<%=request.getContextPath() %>/resources/js/common/map/lineStateElementView.js></script>
     <script type="text/javascript" src=<%=request.getContextPath() %>/resources/js/common/map/textAreaStateElementView.js></script>
     <script type="text/javascript" src=<%=request.getContextPath() %>/resources/js/common/map/arrowInfoStateElementView.js></script>
+    <script type="text/javascript" src=<%=request.getContextPath() %>/resources/js/common/map/InfoTextAreaStateElementView.js></script>
 
 <script type="text/javascript">
 	var viewArea1 = {};

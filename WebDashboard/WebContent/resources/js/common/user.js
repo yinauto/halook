@@ -33,5 +33,5 @@ wgp.constants.VIEW_SETTINGS = {
 	"/total/" : graphViewElement,
 	"/system/" : graphViewElement,
 	"/user/" : graphViewElement,
-	"mapreduce": parentTmpElement
+	"/mapreduce/task": parentTmpElement
 };

@@ -130,14 +130,14 @@ wgp.ArrowStateElementView = Backbone.View.extend({
 		// this.element[2].object.taskInfo = this.taskInfo;
 		var instance = this;
 		if ($.isArray(this.element)) {
-			for ( var i = 0; i < this.element.length; i++) {
+			for ( var i = 0; i < 1; i++) {
 				(this.element)[i].object.mouseover(function(event) {
 					instance.addMouseoverArrow(event);
 				});
 			}
 		}
 		if ($.isArray(this.element)) {
-			for ( var i = 0; i < this.element.length; i++) {
+			for ( var i = 0; i < 1; i++) {
 				(this.element)[i].object.mouseout(function(event) {
 					instance.addMouseoutArrow(event);
 				});
@@ -182,6 +182,8 @@ wgp.ArrowStateElementView = Backbone.View.extend({
 		return color;
 	},
 	addMouseoutArrow : function() {
+		halook.arrowChart.detailInfoElement.animationDisappear({text:""});
+
 		if (halook.arrowState.changableFlag) {
 			// var targetInfo = this.arrowInfo;
 			$("#arrowInfoView").css("display", "none");
@@ -193,7 +195,9 @@ wgp.ArrowStateElementView = Backbone.View.extend({
 		}
 	},
 	addMouseoverArrow : function(event) {
+		halook.arrowChart.detailInfoElement.animationAppear({text:this.taskInfo.TaskAttemptID, "event":event});
 		if (halook.arrowState.changableFlag) {
+			
 			arrowElement = this.element;
 			makeID++;
 			if ($.isArray(arrowElement)) {

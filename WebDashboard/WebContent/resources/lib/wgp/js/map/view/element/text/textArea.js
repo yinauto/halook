@@ -18,7 +18,7 @@ function textArea(elementProperty, paper) {
 
     // テキストエリアに値が設定されていない場合は初期値を設定する。
     if (!elementProperty.text) {
-    	elementProperty.text = "text";
+    	elementProperty.text = "";
     }
 
     // intに直す。

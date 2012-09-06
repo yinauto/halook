@@ -8,7 +8,7 @@ halook = {};
 halook.jobInfoSpace = {};
 halook.filterMode = null;
 
-halook.jobInfoSpace.width = "865px";
+halook.jobInfoSpace.width = "765px";
 halook.jobInfoSpace.height = "90px";
 halook.jobInfoSpace.marginTop = "10px";
 halook.jobInfoSpace.marginLeft = "10px";
@@ -273,6 +273,8 @@ halook.taskDataForShow = sampleDatas;
 
 halook.jobDataForShow = sampleDatasJob;
 
+
+
 // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // ////////////////データの整理をするところ
 // givenDatasはsampleDatasの形を入れることを想定
@@ -337,10 +339,14 @@ var ParentTmpView = wgp.AbstractView
 				this.viewType = wgp.constants.VIEW_TYPE.VIEW;
 				// this.collection = new parentTmpModelCollection();
 				var appView = new wgp.AppView();
-				appView.addView(this, treeString.id + "%");
+				appView.addView(this, "/mapreduce/task%");
 				this.registerCollectionEvent();
 				this.maxId = 0;
 				var realTag = $("#" + this.$el.attr("id"));
+				var dt = new Date();
+				
+				appView.getTermData([ "/mapreduce/task%" ], new Date(
+						dt.getTime() - 1000000000), new Date());
 
 				halook.parentViewer = this;
 				// //////////////////最初のデータの処理を行う。//////////////////////////////////////////////////////////////////////
@@ -362,9 +368,6 @@ var ParentTmpView = wgp.AbstractView
 				// 必要なhtml群を追加する。
 				this._insertInitHtml();
 
-				var dt = new Date();
-				appView.getTermData([ "/hdfs/raoh%" ], new Date(
-						dt.getTime() - 1000000000), new Date());
 				var dataArray = halook.taskDataForShow;
 
 				if (dataArray && dataArray.length > 0) {
@@ -803,15 +806,15 @@ var ParentTmpView = wgp.AbstractView
 
 			},
 			getTermData : function() {
-				// console.log("*****************************************************");
-				// console.log(this);
-				// console.log("getTermData "
-				// + this.collection.pop().get("StartData"));
+				
+				_.each(this.collection.models, function(model) {
+					var valueString = model.get("measurementValue");
+					var value = $.parseJSON(valueString);
+					console.log(value);
+				});
 			},
 			destroy : function() {
 				// delete items
 			}
-
 		}
-
-		);
+);
