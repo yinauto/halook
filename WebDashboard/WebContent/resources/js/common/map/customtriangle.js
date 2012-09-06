@@ -10,8 +10,9 @@
 halook.customTriangle = {};
 halook.customTriangle.width = 42;
 halook.customTriangle.height = 30;
+halook.customTriangle.rate = 1;
 
-function customtriangle(elementProperty, paper){
+function customtriangle(elementProperty, paper, rate){
 
 	// 設定が取得できない場合は処理を終了する。
 	if(!elementProperty){
@@ -19,11 +20,20 @@ function customtriangle(elementProperty, paper){
 	}
 
 	// 数値に直す。
+	
     elementProperty.pointX = parseFloat(elementProperty.pointX);
     elementProperty.pointY = parseFloat(elementProperty.pointY);
     elementProperty.width = parseFloat(elementProperty.width);
     elementProperty.height = parseFloat(elementProperty.height);
 
+    halook.customTriangle.rate = rate;
+//    halook.customTriangle.width *= rate;
+//    halook.customTriangle.height *= rate;
+if(halook.customTriangle.rate < 0.4)
+	halook.customTriangle.rate = 0.4;
+    
+    console.log("ekement height " + rate);
+    
     var positionArray = this.createPositionArray(elementProperty);
     this.createMapElement(positionArray, paper);
     this.object.attr("fill","white");
@@ -60,10 +70,10 @@ customtriangle.prototype.createPositionArray = function(elementProperty){
     var firstPosition = new Position(elementProperty.pointX , elementProperty.pointY);
     positionArray.push(firstPosition);
 
-    var secondPosition = new Position(-halook.customTriangle.width, halook.customTriangle.height/2);
+    var secondPosition = new Position(-halook.customTriangle.width * halook.customTriangle.rate, halook.customTriangle.height *halook.customTriangle.rate/2);
     positionArray.push(secondPosition);
 
-    var thirdPosition = new Position(0, -halook.customTriangle.height);
+    var thirdPosition = new Position(0, -halook.customTriangle.height*halook.customTriangle.rate);
     positionArray.push(thirdPosition);
 
     return positionArray;

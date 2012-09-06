@@ -17,6 +17,7 @@ var makeID = 0;
 halook.arrowState = {};
 halook.arrowState.xOffset = halook.customTriangle.width;
 halook.arrowState.changableFlag = true;
+halook.arrowState.minLength = 42;
 
 wgp.ArrowStateElementView = Backbone.View.extend({
 	// /stateを渡す。NORMAL or ERROR or WARN
@@ -25,7 +26,7 @@ wgp.ArrowStateElementView = Backbone.View.extend({
 		this.model.set({
 			state : argument.state
 		});
-//		console.log(argument.state);
+		// console.log(argument.state);
 		this.taskInfo = argument.info;
 
 		this._paper = argument.paper;
@@ -37,70 +38,45 @@ wgp.ArrowStateElementView = Backbone.View.extend({
 		this.render();
 	},
 	render : function() {
+		var rate = 1;
+		if (this.model.attributes.width < halook.arrowState.minLength) {
+			rate = this.model.attributes.width*1.0/halook.arrowState.minLength;
+			if(rate < 0.5)
+				rete = 0.5;
+		} else
+			this.model.attributes.width = this.model.attributes.width
+					- halook.arrowState.xOffset;
 		var color = this.getStateColor();
 		this.model.set({
 			"attributes" : {
 				fill : color,
 				stroke : color,
-				"stroke-width" : 15
+				"stroke-width" : 15*rate
 			}
 		}, {
 			silent : true
 		});
 
-		// var lengthOfArrow = Math.sqrt(this.model.attributes.width
-		// * this.model.attributes.width + this.model.attributes.height
-		// * this.model.attributes.height);
-		//
-		// var arrowLength = lengthOfArrow * 0.12;
-		// if (arrowLength <= arrowMinLength)
-		// arrowLength = arrowMinLength;
-		// if (arrowLength >= arrowMaxLength)
-		// arrowLength = arrowMaxLength;
-		// var overModelData = new wgp.MapElement({
-		// objectId : 2,
-		// objectName : null,
-		// height : arrowLength * plusMinus(this.model.attributes.height),
-		// width : -arrowLength * plusMinus(this.model.attributes.width),
-		// pointX : this.model.attributes.pointX + this.model.attributes.width
-		// + 2.5,
-		// pointY : this.model.attributes.pointY
-		// + this.model.attributes.height - 2.5
-		// });
-		// var underModelData = new wgp.MapElement({
-		// objectId : 3,
-		// objectName : null,
-		// height : -arrowLength * plusMinus(this.model.attributes.height),
-		// width : -arrowLength * plusMinus(this.model.attributes.width),
-		// pointX : this.model.attributes.pointX + this.model.attributes.width
-		// + 2.5,
-		// pointY : this.model.attributes.pointY
-		// + this.model.attributes.height + 2.5
-		// });
-		// overModelData.set({
-		// "attributes" : {
-		// fill : color,
-		// stroke : color,
-		// "stroke-width" : 7
-		// }
-		// }, {
-		// silent : true
-		// });
-		// underModelData.set({
-		// "attributes" : {
-		// fill : color,
-		// stroke : color,
-		// "stroke-width" : 7,
-		//
-		// }
-		// }, {
-		// silent : true
-		// });
 
-		this.model.attributes.width = this.model.attributes.width
-				- halook.arrowState.xOffset;
-
-		var triangleData = new wgp.MapElement({
+//		console.log(this.model.attributes.height + " "
+//				+ this.model.attributes.width + " "
+//				+ this.model.attributes.pointX + " "
+//				+ this.model.attributes.width + " " + halook.arrowState.xOffset
+//				+ " " + this.model.attributes.pointY);
+		var triangleData;
+		if(rate != 1){
+			
+		triangleData = new wgp.MapElement({
+			objectId : 3,
+			objectName : null,
+			height : this.model.attributes.height,
+			width : this.model.attributes.width,
+			pointX : this.model.attributes.pointX + this.model.attributes.width*2
+					,
+			pointY : this.model.attributes.pointY
+		});
+		}else{
+		triangleData = new wgp.MapElement({
 			objectId : 3,
 			objectName : null,
 			height : this.model.attributes.height,
@@ -109,6 +85,8 @@ wgp.ArrowStateElementView = Backbone.View.extend({
 					+ halook.arrowState.xOffset,
 			pointY : this.model.attributes.pointY
 		});
+		}
+
 		triangleData.set({
 			"attributes" : {
 				fill : color,
@@ -119,9 +97,10 @@ wgp.ArrowStateElementView = Backbone.View.extend({
 		});
 
 		this.element = [];
+
 		this.element[0] = new line(this.model.attributes, this._paper);
 		this.element[1] = new customtriangle(triangleData.attributes,
-				this._paper);
+				this._paper, rate);
 		// this.element[1] = new line(overModelData.attributes, this._paper);
 		// this.element[2] = new line(underModelData.attributes, this._paper);
 		this.element[0].object.taskInfo = this.taskInfo;
@@ -130,14 +109,14 @@ wgp.ArrowStateElementView = Backbone.View.extend({
 		// this.element[2].object.taskInfo = this.taskInfo;
 		var instance = this;
 		if ($.isArray(this.element)) {
-			for ( var i = 0; i < 1; i++) {
+			for ( var i = 0; i < this.element.length; i++) {
 				(this.element)[i].object.mouseover(function(event) {
 					instance.addMouseoverArrow(event);
 				});
 			}
 		}
 		if ($.isArray(this.element)) {
-			for ( var i = 0; i < 1; i++) {
+			for ( var i = 0; i < this.element.length; i++) {
 				(this.element)[i].object.mouseout(function(event) {
 					instance.addMouseoutArrow(event);
 				});
@@ -174,7 +153,7 @@ wgp.ArrowStateElementView = Backbone.View.extend({
 	},
 	getStateColor : function() {
 		var state = this.model.get("state");
-//		console.log(" getStateColor: " + state);
+		// console.log(" getStateColor: " + state);
 		var color = wgp.constants.STATE_COLOR[state];
 		if (color == null) {
 			color = wgp.constants.STATE_COLOR[wgp.constants.STATE.NORMAL];
@@ -182,7 +161,9 @@ wgp.ArrowStateElementView = Backbone.View.extend({
 		return color;
 	},
 	addMouseoutArrow : function() {
-		halook.arrowChart.detailInfoElement.animationDisappear({text:""});
+		halook.arrowChart.detailInfoElement.animationDisappear({
+			text : ""
+		});
 
 		if (halook.arrowState.changableFlag) {
 			// var targetInfo = this.arrowInfo;
@@ -195,9 +176,12 @@ wgp.ArrowStateElementView = Backbone.View.extend({
 		}
 	},
 	addMouseoverArrow : function(event) {
-		halook.arrowChart.detailInfoElement.animationAppear({text:this.taskInfo.TaskAttemptID, "event":event});
+		halook.arrowChart.detailInfoElement.animationAppear({
+			text : this.taskInfo.TaskAttemptID,
+			"event" : event
+		});
 		if (halook.arrowState.changableFlag) {
-			
+
 			arrowElement = this.element;
 			makeID++;
 			if ($.isArray(arrowElement)) {
@@ -213,8 +197,8 @@ wgp.ArrowStateElementView = Backbone.View.extend({
 				startd.setTime(arrow.StartTime);
 				var find = new Date();
 				find.setTime(arrow.FinishTime);
-//				console.log("mousex, mousey, " + event.layerX + ", "
-//						+ event.layerY);
+				// console.log("mousex, mousey, " + event.layerX + ", "
+				// + event.layerY);
 				// view を追加
 				var modelData5 = new wgp.MapElement({
 					objectId : 50000 + makeID,
@@ -233,7 +217,7 @@ wgp.ArrowStateElementView = Backbone.View.extend({
 				// state : "merror"
 				// });
 				// this.arrowInfo = arrowInfoElement;
-//				console.log("this is : ", this);
+				// console.log("this is : ", this);
 				var attemptIDArray = arrow.TaskAttemptID.split("_");
 				var infoString = " ID:</br>" + attemptIDArray[0] + "</br>"
 						+ "_" + attemptIDArray[1] + "</br>" + "_"
@@ -265,7 +249,7 @@ wgp.ArrowStateElementView = Backbone.View.extend({
 	addMouseClickArrow : function(event) {
 		if (halook.arrowState.changableFlag)
 			halook.arrowState.changableFlag = false;
-		else{
+		else {
 			halook.arrowState.changableFlag = true;
 			var arrow = this.taskInfo
 			var startd = new Date();
@@ -285,14 +269,13 @@ wgp.ArrowStateElementView = Backbone.View.extend({
 				fontSize : 20
 			});
 			var attemptIDArray = arrow.TaskAttemptID.split("_");
-			var infoString = " ID:</br>" + attemptIDArray[0] + "</br>"
-					+ "_" + attemptIDArray[1] + "</br>" + "_"
-					+ attemptIDArray[2] + "_" + attemptIDArray[3] + "</br>"
-					+ "_" + attemptIDArray[4] + "_" + attemptIDArray[5]
-					+ "</br>" + "</br>" + "Status:</br>" + arrow.Status
-					+ "</br>" + "</br>" + startd + " - </br>" + find
-					+ "</br>" + "</br>" + "Hostname:</br>" + arrow.Hostname
-					+ "</br>";
+			var infoString = " ID:</br>" + attemptIDArray[0] + "</br>" + "_"
+					+ attemptIDArray[1] + "</br>" + "_" + attemptIDArray[2]
+					+ "_" + attemptIDArray[3] + "</br>" + "_"
+					+ attemptIDArray[4] + "_" + attemptIDArray[5] + "</br>"
+					+ "</br>" + "Status:</br>" + arrow.Status + "</br>"
+					+ "</br>" + startd + " - </br>" + find + "</br>" + "</br>"
+					+ "Hostname:</br>" + arrow.Hostname + "</br>";
 			$("#taskInfoSpace").html(
 					"<font face = 'Verdana' size = '2'>" + infoString
 							+ "</font>");

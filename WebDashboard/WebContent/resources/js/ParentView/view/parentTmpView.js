@@ -62,10 +62,10 @@ halook.parentView.taskSortFunctionTable = {
 
 halook.arrowChartView;
 
-// グラフ最小の時間
-halook.parentView.minGraphTime = 1346160591446;
+// グラフ最小の時間		 1346160591446			1346843780000
+halook.parentView.minGraphTime = 1346837780000;
 // グラフ最大の時間
-halook.parentView.maxGraphTime = 1346160592319;
+halook.parentView.maxGraphTime = 1346875209800;
 // グラフのインターバルの時間
 halook.parentView.intervalTime = halook.parentView.maxGraphTime
 		- halook.parentView.minGraphTime;
@@ -251,7 +251,7 @@ var ParentTmpView = wgp.AbstractView
 				// this.collection = new parentTmpModelCollection();
 				var appView = new wgp.AppView();
 				appView.addView(this, "/mapreduce/task%");
-				this.registerCollectionEvent();
+//				this.registerCollectionEvent();
 				this.maxId = 0;
 				var realTag = $("#" + this.$el.attr("id"));
 				var dt = new Date();
@@ -260,31 +260,8 @@ var ParentTmpView = wgp.AbstractView
 						dt.getTime() - 1000000000), new Date());
 
 				halook.parentViewer = this;
-				// //////////////////最初のデータの処理を行う。//////////////////////////////////////////////////////////////////////
-				//取得したデータを保存用の部位に代入する。
-				halook.taskDataOriginal = sampleDatas;
-				halook.taskDataForShow = sampleDatas;
-
 				
-				
-				
-				
-				this._rearrangeDatas(halook.taskDataForShow);
-
-				// /////////////////////////////////////////////////////////////////////////////////////////////////////////////
-				// /sortを実施
-				this._executeTaskSort(halook.taskDataForShow, DisplayMode);
-				// for ( var i = 0; i < halook.taskDataForShow.length; i++) {
-				// console.log("HostName :" + halook.taskDataForShow[i].Hostname
-				// + " "
-				// + halook.taskDataForShow[i].StartTime);
-				// }
-				// for ( var i = 0; i < halook.taskDataForShow.length; i++) {
-				// console.log("taskName :" +
-				// halook.taskDataForShow[i].TaskAttemptID);
-				// }
-				// 必要なhtml群を追加する。
-				this._insertInitHtml();
+				//firstDataprocesser
 
 				
 				
@@ -296,19 +273,6 @@ var ParentTmpView = wgp.AbstractView
 //					this.render();
 //				}
 
-				// var array = this.collection.where({Status:"SUCCESS"});
-				// alert(array.length + " kikai");
-				//				
-				var datas = this.getData();
-				// console.log("data dayo " + datas.length);
-				var sampleModel = this.collection.pop();
-				// alert(sampleModel.get("Status"));
-				var array = this.collection.where({
-					Status : "SUCCESS"
-				});
-				// alert(array[0].get("TaskAttemptID") +" "+
-				// array[1].get("TaskAttemptID") +" "+
-				// array[2].get("TaskAttemptID") + " kikai");
 
 				if (this.width == null) {
 					this.width = realTag.width();
@@ -428,7 +392,7 @@ var ParentTmpView = wgp.AbstractView
 
 				$("#" + this.$el.attr("id"))
 						.append(
-								'<div id="jobInfoSpace" style="border:outset;border-color:#EEEEEE;border-width:7px;"></div>'
+								'<div id="jobInfoSpace" style="border:outset;border-color:#EEEEEE;border-width:7px;"></div><img  width="100" height="100" src ="./halook2.jpg" alt="nopage" ></img>'
 										+ '<div class="clearSpace"></div>');
 				$("#jobInfoSpace")
 						.css(
@@ -694,11 +658,12 @@ var ParentTmpView = wgp.AbstractView
 				var resultCollection;
 				if (halook.filterMode == "fail") {
 					resultCollection = halook.parentViewer.collection.where({
-						Status : "FAIL"
+						Status : wgp.constants.JOB_STATE.FAIL
+
 					});
 				} else if (halook.filterMode == "killed") {
 					resultCollection = halook.parentViewer.collection.where({
-						Status : "KILLED"
+						Status : wgp.constants.JOB_STATE.KILLED
 					});
 				}
 
@@ -727,18 +692,57 @@ var ParentTmpView = wgp.AbstractView
 
 			},
 			getTermData : function() {
-				
+//				console.log("getDataNow");
 				_.each(this.collection.models, function(model) {
 					var valueString = model.get("measurementValue");
 					var value = $.parseJSON(valueString);
+					if(value == null)
+						return;
 					for(var i = 0; i< value.length; ++i){
 						getFromServerDatas.push(value[i]);						
 					}
-					console.log(value);
+//					console.log(value);
+					
 				});
+				console.log("DoneDataNow");
+				this._initDataProcesser();
+
 			},
 			destroy : function() {
 				// delete items
+			},
+			_initDataProcesser:function(){
+				// //////////////////最初のデータの処理を行う。//////////////////////////////////////////////////////////////////////
+				//取得したデータを保存用の部位に代入する。
+				console.log("initData now");
+	//			halook.taskDataOriginal = sampleDatas;
+		//		halook.taskDataForShow = sampleDatas;
+				halook.taskDataOriginal = getFromServerDatas;
+				halook.taskDataForShow = getFromServerDatas;
+					
+				console.log("rearrange start now");
+				
+				this._rearrangeDatas(halook.taskDataForShow);
+
+				// /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				// /sortを実施
+				console.log("sorting now");
+				this._executeTaskSort(halook.taskDataForShow, DisplayMode);
+				// for ( var i = 0; i < halook.taskDataForShow.length; i++) {
+				// console.log("HostName :" + halook.taskDataForShow[i].Hostname
+				// + " "
+				// + halook.taskDataForShow[i].StartTime);
+				// }
+				// for ( var i = 0; i < halook.taskDataForShow.length; i++) {
+				// console.log("taskName :" +
+				// halook.taskDataForShow[i].TaskAttemptID);
+				// }
+				// 必要なhtml群を追加する。
+				this._insertInitHtml();
+				
+//				halook.arrowChartView.redraw("node");
+
 			}
+			
 		}
 );

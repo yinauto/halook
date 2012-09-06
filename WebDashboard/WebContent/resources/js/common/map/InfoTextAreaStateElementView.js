@@ -29,7 +29,6 @@ wgp.InfoTextAreaStateElementView = Backbone.View
 				halook.arrowChart.detailInfoElement = this;
 			},
 			render : function() {
-				console.log("textArea render");
 				var color = this.getStateColor();
 				this.model.set({
 					"attributes" : {

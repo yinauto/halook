@@ -1,5 +1,5 @@
 //paperの高さ
-halook.arrowChart.paperHeight = 1500;
+halook.arrowChart.paperHeight = getFromServerDatas.length * halook.arrowChart.cellHeight;
 // paperの幅
 halook.arrowChart.paperWidth = 725;
 // 矢印絵画領域の始まるオフセット分
@@ -58,6 +58,8 @@ var ArrowChartView = wgp.AbstractView
 
 				this.paper = new Raphael(document.getElementById(this.$el
 						.attr("id")), this.width, this.height);
+				halook.arrowChart.paperHeight = getFromServerDatas.length * halook.arrowChart.cellHeight;
+
 				this.paper.setSize(halook.arrowChart.paperWidth,
 						halook.arrowChart.paperHeight);
 
@@ -178,7 +180,7 @@ var ArrowChartView = wgp.AbstractView
 					// +
 					// halook.parentView.taskAttemptInfoDictionary[data.Mapreduce
 					// + "_" + data.SimpleID]);
-					if (data.Status == "FAIL" || data.Status == "KILLED") {
+					if (data.Status == wgp.constants.JOB_STATE.FAIL || data.Status == wgp.constants.JOB_STATE.KILLED) {
 						var errorInfo;
 						if (DisplayMode == "task") {
 							errorInfo = this._calcErrorLengthAndStartPos(
@@ -198,17 +200,17 @@ var ArrowChartView = wgp.AbstractView
 							pointY : errorInfo.posY
 						});
 						stateString = wgp.constants.STATE[data.Status];
-						// if (data.Status == "FAIL")
+						// if (data.Status == wgp.constants.JOB_STATE.FAIL)
 						// stateString = "fail";
-						// else if (data.Status == "KILLED")
-						// stateString = "killed";
+						// else if (data.Status == wgp.constants.JOB_STATE.KILLED)
+						// stateString = wgp.constants.JOB_STATE.KILLED;
 						var errorStateString = stateString;
 						stateString = data.Mapreduce + stateString;
 
-						console.log("state string : " + stateString
-								+ " error state " + errorStateString + " "
-								+ data.SimpleID);
-						if (data.Status == "FAIL") {
+//						console.log("state string : " + stateString
+//								+ " error state " + errorStateString + " "
+//								+ data.SimpleID);
+						if (data.Status == wgp.constants.JOB_STATE.FAIL) {
 							new wgp.ErrorStateElementView({
 								model : modelDataForError,
 								paper : this.paper,
@@ -455,16 +457,25 @@ var ArrowChartView = wgp.AbstractView
 			},
 
 			redraw : function(mode) {
+				halook.arrowChart.paperHeight = getFromServerDatas.length * halook.arrowChart.cellHeight;
 				this.paper.clear();
+				this.paper.setSize(halook.arrowChart.paperWidth,halook.arrowChart.paperHeight);
 				DisplayMode = mode;
 				// 基本となるテーブルの線を描く
 				this._drawTableLines();
-
 				// 矢印たちと×印の絵画の作成
+				halook.arrowChart.paperHeight = getFromServerDatas.length * halook.arrowChart.cellHeight;
+							console.log(halook.arrowChart.paperWidth + " "+halook.arrowChart.paperHeight + " "+halook.arrowChart.paperHeight + " "+halook.arrowChart.cellHeight + " ");
+				
+				
 				this._drawArrowAndError();
+				console.log("drawed arrow and errors lines");
 
 				// textAreaの描画を行う。
 				this._drawCellTitle();
+				
+				this._initInfoElement();
+				
 			}
 
 		});

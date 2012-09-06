@@ -11,7 +11,6 @@ wgp.TextAreaStateElementView = Backbone.View.extend({
         this.render();
     },
     render:function(){
-    	console.log("textArea render");
     	var color = this.getStateColor();
     	this.model.set({"attributes" : {"stroke-width":0}}, {silent:true});
     	this.element = new textArea(this.model.attributes, this._paper);
