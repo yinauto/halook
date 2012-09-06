@@ -2,7 +2,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-DisplayMode = "task";// "task";
+DisplayMode = "node";// "task";
 
 halook = {};
 halook.jobInfoSpace = {};
@@ -178,96 +178,7 @@ var sampleDatas = [ {
 	Status : "SUCCESS",
 }, ];
 
-// var sampleDatas = [ {
-// StartTime : 1346160591456,
-// FinishTime : 1346160591946,
-// SubmitTime : 1346160591446,
-// JobID : "job_201208281744_0012",
-// TaskAttemptID : "attempt_201306281744_0012_m_000004_1",
-// Hostname : "/abcfield/raoh",
-// Status : "SUCCESS",
-// }, {
-// StartTime : 1346160591856,
-// FinishTime : 1346160592046,
-// SubmitTime : 1346160591446,
-// JobID : "job_201208281744_0012",
-// TaskAttemptID : "attempt_201306281744_0012_r_000033_1",
-// Hostname : "/default-rack/raoh02",
-// Status : "FAIL",
-// }, {
-// StartTime : 1346160591556,
-// FinishTime : 1346160591846,
-// SubmitTime : 1346160591446,
-// JobID : "job_201208281744_0012",
-// TaskAttemptID : "attempt_201306281744_0012_m_000004_2",
-// Hostname : "/default-rack/kenma",
-// Status : "KILLED",
-// }, {
-// StartTime : 1346160591956,
-// FinishTime : 1346160592319,
-// SubmitTime : 1346160591446,
-// JobID : "job_201208281744_0012",
-// TaskAttemptID : "attempt_201306281744_0012_m_000004_0",
-// Hostname : "/default-rack/raoh05",
-// Status : "RUNNING",
-// }, {
-// StartTime : 1346160591446,
-// FinishTime : 1346160592246,
-// SubmitTime : 1346160591446,
-// JobID : "job_201208281744_0012",
-// TaskAttemptID : "attempt_201306281744_0012_r_000013_0",
-// Hostname : "/abcfield/raoh",
-// Status : "SUCCESS",
-// }, {
-// StartTime : 1346160591756,
-// FinishTime : 1346160592046,
-// SubmitTime : 1346160591446,
-// JobID : "job_201208281744_0012",
-// TaskAttemptID : "attempt_201306281744_0012_r_000083_0",
-// Hostname : "/default-rack/raoh02",
-// Status : "FAIL",
-// }, {
-// StartTime : 1346160592156,
-// FinishTime : 1346160592280,
-// SubmitTime : 1346160591446,
-// JobID : "job_201208281744_0012",
-// TaskAttemptID : "attempt_201306281744_0012_r_000033_2",
-// Hostname : "/oioioi/raoh",
-// Status : "SUCCESS",
-// }, {
-// StartTime : 1346160591556,
-// FinishTime : 1346160591646,
-// SubmitTime : 1346160591446,
-// JobID : "job_201208281744_0012",
-// TaskAttemptID : "attempt_201306281744_0012_r_000039_0",
-// Hostname : "/default-rack/raoh02",
-// Status : "KILLED",
-// }, {
-// StartTime : 1346160591446,
-// FinishTime : 1346160592319,
-// SubmitTime : 1346160591446,
-// JobID : "job_201208281744_0012",
-// TaskAttemptID : "attempt_201306281744_0012_m_000028_0",
-// Hostname : "/abcfield/raoh",
-// Status : "RUNNING",
-// }, {
-// StartTime : 1346160591756,
-// FinishTime : 1346160591956,
-// SubmitTime : 1346160591446,
-// JobID : "job_201208281744_0012",
-// TaskAttemptID : "attempt_201306281744_0012_r_000033_0",
-// Hostname : "/default-rack02/menma02",
-// Status : "RUNNING",
-// }, {
-// StartTime : 1346160591746,
-// FinishTime : 1346160592300,
-// SubmitTime : 1346160591446,
-// JobID : "job_201208281744_0012",
-// TaskAttemptID : "attempt_201306281744_0012_m_000028_1",
-// Hostname : "/abcfield/raoh",
-// Status : "FAIL",
-// }, ];
-
+getFromServerDatas=[];
 halook.taskDataOriginal = sampleDatas;
 halook.taskDataForShow = sampleDatas;
 
@@ -350,7 +261,14 @@ var ParentTmpView = wgp.AbstractView
 
 				halook.parentViewer = this;
 				// //////////////////最初のデータの処理を行う。//////////////////////////////////////////////////////////////////////
+				//取得したデータを保存用の部位に代入する。
+				halook.taskDataOriginal = sampleDatas;
+				halook.taskDataForShow = sampleDatas;
 
+				
+				
+				
+				
 				this._rearrangeDatas(halook.taskDataForShow);
 
 				// /////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -368,12 +286,15 @@ var ParentTmpView = wgp.AbstractView
 				// 必要なhtml群を追加する。
 				this._insertInitHtml();
 
-				var dataArray = halook.taskDataForShow;
-
-				if (dataArray && dataArray.length > 0) {
-					this.addCollection(dataArray);
-					this.render();
-				}
+				
+				
+		/////////////******************************:caution**********************/////////////////////
+//				var dataArray = halook.taskDataForShow;
+//
+//				if (dataArray && dataArray.length > 0) {
+//					this.addCollection(dataArray);
+//					this.render();
+//				}
 
 				// var array = this.collection.where({Status:"SUCCESS"});
 				// alert(array.length + " kikai");
@@ -810,6 +731,9 @@ var ParentTmpView = wgp.AbstractView
 				_.each(this.collection.models, function(model) {
 					var valueString = model.get("measurementValue");
 					var value = $.parseJSON(valueString);
+					for(var i = 0; i< value.length; ++i){
+						getFromServerDatas.push(value[i]);						
+					}
 					console.log(value);
 				});
 			},

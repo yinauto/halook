@@ -34,19 +34,20 @@ wgp.AbstractView = Backbone.View.extend({
 		// When Collection get Term Data.
 		this.collection.on('getTermData', this.getTermData, this);
 	},
-	stopRegisterCollectionEvent : function(){
+	stopRegisterCollectionEvent : function() {
+		if (this.collection) {
+			// When Collection Add Model
+			this.collection.off('add', this.onAdd, this);
 
-		// When Collection Add Model
-		this.collection.off('add', this.onAdd, this);
+			// When Collection Change Model
+			this.collection.off('change', this.onChange, this);
 
-		// When Collection Change Model
-		this.collection.off('change', this.onChange, this);
+			// When Collection Remove Model
+			this.collection.off('remove', this.onRemove, this);
 
-		// When Collection Remove Model
-		this.collection.off('remove', this.onRemove, this);
-
-		// When Collection get Term Data.
-		this.collection.off('getTermData', this.getTermData, this);
+			// When Collection get Term Data.
+			this.collection.off('getTermData', this.getTermData, this);
+		}
 	},
 	getAttributes : function(attributesKey) {
 		var attributes = this.attributes;
@@ -70,7 +71,7 @@ wgp.AbstractView = Backbone.View.extend({
 	getRegisterId : function() {
 		return this.$el.attr("id");
 	},
-	destroy : function(){
+	destroy : function() {
 		this.stopRegisterCollectionEvent();
 	}
 });

@@ -74,6 +74,7 @@ wgp.InfoTextAreaStateElementView = Backbone.View
 				return color;
 			},
 			animationAppear : function(info) {
+
 				console.log("animation appear");
 				this._makePath(info.event);
 				this.element[0].attr({

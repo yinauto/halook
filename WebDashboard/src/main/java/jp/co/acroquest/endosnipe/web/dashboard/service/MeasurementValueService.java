@@ -104,7 +104,7 @@ public class MeasurementValueService
             dashboardDto.setMeasurementItemId(queryDto.measurementItemId);
             dashboardDto.setMeasurementItemName(queryDto.measurementItemName);
             dashboardDto.setMeasurementTime(queryDto.measurementTime.getTime());
-            dashboardDto.setMeasurementValue(queryDto.value.toString());
+            dashboardDto.setMeasurementValue(queryDto.value);
             dashboardDtoList.add(dashboardDto);
         }
     }
