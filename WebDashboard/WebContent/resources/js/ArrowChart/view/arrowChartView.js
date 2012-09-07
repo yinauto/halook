@@ -417,7 +417,7 @@ var ArrowChartView = wgp.AbstractView
 					jobColor = wgp.constants.STATE_COLOR[wgp.constants.STATE.RUNNING];
 				}
 
-				$("#jobInfoSpace").html(
+				$("#jobInfoSpaceHtml").append(
 						"<p><font size='6' face='Comic Sans MS'><b>"
 								+ halook.jobDataForShow.JobID
 								+ " : </b></font>" + "<font size='6' color='"
@@ -430,7 +430,7 @@ var ArrowChartView = wgp.AbstractView
 								+ sd.toLocaleString() + "  -  "
 								+ fd.toLocaleString() + "( SUBMIT_TIME:"
 								+ subd.toLocaleString() + " )</font></br></p>");
-				$("#jobInfoSpace p").css({
+				$("#jobInfoSpaceHtml p").css({
 					marginLeft : 10,
 					marginTop : 0
 				});

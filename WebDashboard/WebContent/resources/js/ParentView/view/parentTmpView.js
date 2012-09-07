@@ -8,7 +8,7 @@ halook = {};
 halook.jobInfoSpace = {};
 halook.filterMode = null;
 
-halook.jobInfoSpace.width = "765px";
+halook.jobInfoSpace.width = "865px";
 halook.jobInfoSpace.height = "90px";
 halook.jobInfoSpace.marginTop = "10px";
 halook.jobInfoSpace.marginLeft = "10px";
@@ -19,7 +19,7 @@ halook.clearSpace.height = "15px";
 halook.clearSpace.clear = "both";
 
 halook.buttons = {};
-halook.buttons.marginLeft = "10px";
+halook.buttons.marginLeft = "15px";
 halook.buttons.float = "left";
 
 halook.taskButton = {};
@@ -52,6 +52,9 @@ halook.dygraphChart.width = "700px";
 halook.dygraphChart.height = "200px";
 halook.dygraphChart.backgroundColor = "#EEEEEE";
 halook.dygraphChart.float = "right";
+halook.dygraphChart.rigntMargin = "7px";
+halook.dygraphChart.topMargin = "5px";
+halook.dygraphChart.borderStyle = "outset";
 
 halook.parentView = {};
 halook.parentViewer;
@@ -62,7 +65,7 @@ halook.parentView.taskSortFunctionTable = {
 
 halook.arrowChartView;
 
-// グラフ最小の時間		 1346160591446			1346843780000
+// グラフ最小の時間 1346160591446 1346843780000
 halook.parentView.minGraphTime = 1346837780000;
 // グラフ最大の時間
 halook.parentView.maxGraphTime = 1346875209800;
@@ -178,13 +181,11 @@ var sampleDatas = [ {
 	Status : "SUCCESS",
 }, ];
 
-getFromServerDatas=[];
+getFromServerDatas = [];
 halook.taskDataOriginal = sampleDatas;
 halook.taskDataForShow = sampleDatas;
 
 halook.jobDataForShow = sampleDatasJob;
-
-
 
 // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // ////////////////データの整理をするところ
@@ -251,28 +252,25 @@ var ParentTmpView = wgp.AbstractView
 				// this.collection = new parentTmpModelCollection();
 				var appView = new wgp.AppView();
 				appView.addView(this, "/mapreduce/task%");
-//				this.registerCollectionEvent();
+				// this.registerCollectionEvent();
 				this.maxId = 0;
 				var realTag = $("#" + this.$el.attr("id"));
 				var dt = new Date();
-				
-				appView.getTermData([ "/mapreduce/task%" ], new Date(
-						dt.getTime() - 1000000000), new Date());
+
+				appView.getTermData([ "/mapreduce/task%" ], new Date(dt
+						.getTime() - 1000000000), new Date());
 
 				halook.parentViewer = this;
-				
-				//firstDataprocesser
 
-				
-				
-		/////////////******************************:caution**********************/////////////////////
-//				var dataArray = halook.taskDataForShow;
-//
-//				if (dataArray && dataArray.length > 0) {
-//					this.addCollection(dataArray);
-//					this.render();
-//				}
+				// firstDataprocesser
 
+				// ///////////******************************:caution**********************/////////////////////
+				// var dataArray = halook.taskDataForShow;
+				//
+				// if (dataArray && dataArray.length > 0) {
+				// this.addCollection(dataArray);
+				// this.render();
+				// }
 
 				if (this.width == null) {
 					this.width = realTag.width();
@@ -392,7 +390,7 @@ var ParentTmpView = wgp.AbstractView
 
 				$("#" + this.$el.attr("id"))
 						.append(
-								'<div id="jobInfoSpace" style="border:outset;border-color:#EEEEEE;border-width:7px;"></div><img  width="100" height="100" src ="./halook2.jpg" alt="nopage" ></img>'
+								'<div id="jobInfoSpace" style="border:outset;border-color:#EEEEEE;border-width:7px;"><div id="jobInfoSpaceHtml"  width="450" height = "60"></div><div id = "jobInfoImage" width="250" height="50"><img  width="120" height="36" src ="/WebDashboard/resources/images/halook2.png" alt="nopage" ></div></div>'
 										+ '<div class="clearSpace"></div>');
 				$("#jobInfoSpace")
 						.css(
@@ -415,6 +413,15 @@ var ParentTmpView = wgp.AbstractView
 					marginLeft : 5,
 					marginTop : 0
 				});
+				$("#jobInfoSpaceHtml").css({
+					float:"left"
+				});
+				
+				$("#jobInfoImage").css({
+					float:"right"
+				});
+								
+				
 				$(".clearSpace").css({
 					height : halook.clearSpace.height,
 					clear : halook.clearSpace.clear
@@ -423,7 +430,19 @@ var ParentTmpView = wgp.AbstractView
 				// ボタンたちの追加を行う。////////////////////////////////////////////
 				$("#" + this.$el.attr("id"))
 						.append(
-								'<div id="searchSpace"><h3><a href="#">Normal Sort</a></h3><div id="buttons"><input type="button" id="taskButton" value="task"></input><input type="button" id="nodeButton" value="node"></input><input type="button" id="failButton" value="FAIL"></input><input type="button" id="killedButton" value="KILLED"></input></br></div><h3><a href="#">Detail Sort</a></h3><div id="detailSearch" style="width:900;">aaa</div></div><div id="taskInfoSpace" style="background-color:#EEDDDD;border:outset;border-color:#AA7777;border-width:4px;"></div>');
+								'<input type="button" id="taskButton" value="task"></input><input type="button" id="nodeButton" value="node"></input><input type="button" id="failButton" value="FAIL"></input><input type="button" id="killedButton" value="KILLED"></input></br></br></br><div id="taskInfoSpace" style="background-color:#EEDDDD;border:outset;border-color:#AA7777;border-width:4px;"></div>');
+
+				// $("#" + this.$el.attr("id"))
+				// .append(
+				// '<div id="searchSpace"><h3><a href="#">Normal
+				// Sort</a></h3><div id="buttons"><input type="button"
+				// id="taskButton" value="task"></input><input type="button"
+				// id="nodeButton" value="node"></input><input type="button"
+				// id="failButton" value="FAIL"></input><input type="button"
+				// id="killedButton" value="KILLED"></input></br></div><h3><a
+				// href="#">Detail Sort</a></h3><div id="detailSearch"
+				// style="width:900;">aaa</div></div><div id="taskInfoSpace"
+				// style="background-color:#EEDDDD;border:outset;border-color:#AA7777;border-width:4px;"></div>');
 				// $("#searchSpace").css({height:500});
 				// $("#detailSearch").css({ height:300});
 				// $("#buttons").css({
@@ -434,6 +453,7 @@ var ParentTmpView = wgp.AbstractView
 				$("#taskButton").css({
 					width : halook.taskButton.width,
 					height : halook.taskButton.height,
+					marginLeft : halook.buttons.marginLeft,
 					float : "left",
 				});
 
@@ -446,6 +466,7 @@ var ParentTmpView = wgp.AbstractView
 					width : halook.nodeButton.width,
 					height : halook.nodeButton.height,
 					float : "left",
+					marginLeft : halook.buttons.marginLeft,
 
 				});
 				$("#nodeButton").button();
@@ -456,6 +477,7 @@ var ParentTmpView = wgp.AbstractView
 					width : halook.nodeButton.width,
 					height : halook.nodeButton.height,
 					float : "left",
+					marginLeft : halook.buttons.marginLeft,
 
 				});
 				$("#failButton").button();
@@ -466,18 +488,19 @@ var ParentTmpView = wgp.AbstractView
 					width : halook.nodeButton.width,
 					height : halook.nodeButton.height,
 					float : "left",
+					marginLeft : halook.buttons.marginLeft,
 
 				});
 				$("#killedButton").button();
 				$("#killedButton").click(instance._changeToKilled);
 
-				$("#searchSpace").css({
-					"margin-left" : 10
-				});
-				$("#searchSpace").accordion({
-					autoHeight : false,
-					navigation : true
-				});
+				// $("#searchSpace").css({
+				// "margin-left" : 10
+				// });
+				// $("#searchSpace").accordion({
+				// autoHeight : false,
+				// navigation : true
+				// });
 
 				$("#taskInfoSpace")
 						.css(
@@ -522,7 +545,9 @@ var ParentTmpView = wgp.AbstractView
 					height : halook.dygraphChart.height,
 					backgroundColor : halook.dygraphChart.backgroundColor,
 					float : halook.dygraphChart.float,
-					marginTop : 5
+					marginRight : halook.dygraphChart.rigntMargin,
+					marginTop : halook.dygraphChart.topMargin,
+					"border-style" : halook.dygraphChart.borderStyle
 				});
 
 				this.dygraphView = new DygraphChartView({
@@ -692,17 +717,17 @@ var ParentTmpView = wgp.AbstractView
 
 			},
 			getTermData : function() {
-//				console.log("getDataNow");
+				// console.log("getDataNow");
 				_.each(this.collection.models, function(model) {
 					var valueString = model.get("measurementValue");
 					var value = $.parseJSON(valueString);
-					if(value == null)
+					if (value == null)
 						return;
-					for(var i = 0; i< value.length; ++i){
-						getFromServerDatas.push(value[i]);						
+					for ( var i = 0; i < value.length; ++i) {
+						getFromServerDatas.push(value[i]);
 					}
-//					console.log(value);
-					
+					// console.log(value);
+
 				});
 				console.log("DoneDataNow");
 				this._initDataProcesser();
@@ -711,17 +736,17 @@ var ParentTmpView = wgp.AbstractView
 			destroy : function() {
 				// delete items
 			},
-			_initDataProcesser:function(){
+			_initDataProcesser : function() {
 				// //////////////////最初のデータの処理を行う。//////////////////////////////////////////////////////////////////////
-				//取得したデータを保存用の部位に代入する。
+				// 取得したデータを保存用の部位に代入する。
 				console.log("initData now");
-	//			halook.taskDataOriginal = sampleDatas;
-		//		halook.taskDataForShow = sampleDatas;
+				// halook.taskDataOriginal = sampleDatas;
+				// halook.taskDataForShow = sampleDatas;
 				halook.taskDataOriginal = getFromServerDatas;
 				halook.taskDataForShow = getFromServerDatas;
-					
+
 				console.log("rearrange start now");
-				
+
 				this._rearrangeDatas(halook.taskDataForShow);
 
 				// /////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -739,10 +764,9 @@ var ParentTmpView = wgp.AbstractView
 				// }
 				// 必要なhtml群を追加する。
 				this._insertInitHtml();
-				
-//				halook.arrowChartView.redraw("node");
+
+				// halook.arrowChartView.redraw("node");
 
 			}
-			
-		}
-);
+
+		});

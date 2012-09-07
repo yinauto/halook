@@ -177,7 +177,7 @@ wgp.ArrowStateElementView = Backbone.View.extend({
 	},
 	addMouseoverArrow : function(event) {
 		halook.arrowChart.detailInfoElement.animationAppear({
-			text : this.taskInfo.TaskAttemptID,
+			text : this.taskInfo.TaskAttemptID+"\n"+ this.taskInfo.Status + ":  @" + this.taskInfo.Hostname,
 			"event" : event
 		});
 		if (halook.arrowState.changableFlag) {
@@ -247,8 +247,10 @@ wgp.ArrowStateElementView = Backbone.View.extend({
 		}
 	},
 	addMouseClickArrow : function(event) {
-		if (halook.arrowState.changableFlag)
+		if (halook.arrowState.changableFlag){
 			halook.arrowState.changableFlag = false;
+			$("#taskInfoSpace").css({"border-style":"inset"});
+		}
 		else {
 			halook.arrowState.changableFlag = true;
 			var arrow = this.taskInfo
@@ -276,6 +278,7 @@ wgp.ArrowStateElementView = Backbone.View.extend({
 					+ "</br>" + "Status:</br>" + arrow.Status + "</br>"
 					+ "</br>" + startd + " - </br>" + find + "</br>" + "</br>"
 					+ "Hostname:</br>" + arrow.Hostname + "</br>";
+			$("#taskInfoSpace").css({"border-style":"outset"});
 			$("#taskInfoSpace").html(
 					"<font face = 'Verdana' size = '2'>" + infoString
 							+ "</font>");

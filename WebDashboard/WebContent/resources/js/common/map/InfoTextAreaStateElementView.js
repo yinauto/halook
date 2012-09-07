@@ -74,16 +74,11 @@ wgp.InfoTextAreaStateElementView = Backbone.View
 			},
 			animationAppear : function(info) {
 
-				console.log("animation appear");
 				this._makePath(info.event);
 				this.element[0].attr({
 					path : halook.infoText.inTransfer,
 					text : "ohhhhhhh"
 				});
-				console.log("---------------------------");
-				console.log(this.element[0]);
-				console.log(this.element[1]);
-				console.log("---------------------------");
 				this.element[1].textObject.attr({
 					x : halook.infoText.x + halook.infoText.width/2,
 					y : halook.infoText.y + halook.infoText.textObjectOffsety,
@@ -115,20 +110,6 @@ wgp.InfoTextAreaStateElementView = Backbone.View
 				}, 100, function() {
 					endAnimation();
 				});
-				console.log(this.element[1]);
-				// console.log("animation Appear");
-				// // this.element.object.text = info.text;
-				// var anim2 = Raphael.animation({
-				// "stroke-opacity" : 1,
-				// r : 5,
-				// "width" : 2000,
-				// "height" : 1000,
-				// x : 100,
-				// y : 100,
-				// "fill-opacity" : 1,
-				// }, 1500, "easeOut", endAnimationAppear());
-				// console.log(anim2);
-				// this.element[0].object.animate(anim2);
 			},
 			animationDisappear : function(info) {
 				console.log("animation disappear");
