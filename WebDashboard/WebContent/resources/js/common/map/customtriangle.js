@@ -32,7 +32,6 @@ function customtriangle(elementProperty, paper, rate){
 if(halook.customTriangle.rate < 0.4)
 	halook.customTriangle.rate = 0.4;
     
-    console.log("ekement height " + rate);
     
     var positionArray = this.createPositionArray(elementProperty);
     this.createMapElement(positionArray, paper);

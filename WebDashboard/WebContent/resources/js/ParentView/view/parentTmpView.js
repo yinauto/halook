@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 DisplayMode = "node";// "task";
+// starttime; finishtime
 
 halook = {};
 halook.jobInfoSpace = {};
@@ -20,6 +21,7 @@ halook.clearSpace.clear = "both";
 
 halook.buttons = {};
 halook.buttons.marginLeft = "15px";
+halook.buttons.marginFilterLeft = "45px";
 halook.buttons.float = "left";
 
 halook.taskButton = {};
@@ -60,7 +62,9 @@ halook.parentView = {};
 halook.parentViewer;
 halook.parentView.taskSortFunctionTable = {
 	"task" : _taskIDSort,
-	"node" : _nodeSort
+	"node" : _nodeSort,
+	"starttime" : _startTimeSort,
+	"finishtime" : _finishTimeSort,
 };
 
 halook.arrowChartView;
@@ -243,6 +247,22 @@ function _nodeSort(first, second) {
 	return -1;
 }
 
+// 偶数か奇数かで値がかわるぉ
+
+var startTimeOdd = -1;
+function _startTimeSort(first, second) {
+	if (first.StartTime > second.StartTime)
+		return 1 * startTimeOdd;
+	return -1 * startTimeOdd;
+}
+
+var finishTimeOdd = -1;
+function _finishTimeSort(first, second) {
+	if (first.FinishTime > second.FinishTime)
+		return 1 * finishTimeOdd;
+	return -1 * finishTimeOdd;
+}
+
 // ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 var ParentTmpView = wgp.AbstractView
@@ -390,7 +410,7 @@ var ParentTmpView = wgp.AbstractView
 
 				$("#" + this.$el.attr("id"))
 						.append(
-								'<div id="jobInfoSpace" style="border:outset;border-color:#EEEEEE;border-width:7px;"><div id="jobInfoSpaceHtml"  width="450" height = "60"></div><div id = "jobInfoImage" width="250" height="50"><img  width="120" height="36" src ="/WebDashboard/resources/images/halook2.png" alt="nopage" ></div></div>'
+								'<div id="jobInfoSpace" style="border:outset;border-color:#EEEEEE;border-width:7px;"><div id="jobInfoSpaceHtml"  width="450" height = "60"></div><div id = "jobInfoImage" width="250" height="50"><img src ="/WebDashboard/resources/images/halook_120x30.png" alt="nopage" ></div></div>'
 										+ '<div class="clearSpace"></div>');
 				$("#jobInfoSpace")
 						.css(
@@ -414,14 +434,13 @@ var ParentTmpView = wgp.AbstractView
 					marginTop : 0
 				});
 				$("#jobInfoSpaceHtml").css({
-					float:"left"
+					float : "left"
 				});
-				
+
 				$("#jobInfoImage").css({
-					float:"right"
+					float : "right"
 				});
-								
-				
+
 				$(".clearSpace").css({
 					height : halook.clearSpace.height,
 					clear : halook.clearSpace.clear
@@ -430,7 +449,7 @@ var ParentTmpView = wgp.AbstractView
 				// ボタンたちの追加を行う。////////////////////////////////////////////
 				$("#" + this.$el.attr("id"))
 						.append(
-								'<input type="button" id="taskButton" value="task"></input><input type="button" id="nodeButton" value="node"></input><input type="button" id="failButton" value="FAIL"></input><input type="button" id="killedButton" value="KILLED"></input></br></br></br><div id="taskInfoSpace" style="background-color:#EEDDDD;border:outset;border-color:#AA7777;border-width:4px;"></div>');
+								'<input type="button" id="taskButton" value="task"></input><input type="button" id="nodeButton" value="node"></input><input type="button" id="startButton" value="START_TIME"></input><input type="button" id="finishButton" value="FINISH_TIME"></input><input type="button" id="failButton" value="FAIL"></input><input type="button" id="killedButton" value="KILLED"></input></br></br></br><div id="taskInfoSpace" style="background-color:#EEDDDD;border:outset;border-color:#AA7777;border-width:4px;"></div>');
 
 				// $("#" + this.$el.attr("id"))
 				// .append(
@@ -477,7 +496,7 @@ var ParentTmpView = wgp.AbstractView
 					width : halook.nodeButton.width,
 					height : halook.nodeButton.height,
 					float : "left",
-					marginLeft : halook.buttons.marginLeft,
+					marginLeft : halook.buttons.marginFilterLeft,
 
 				});
 				$("#failButton").button();
@@ -493,6 +512,28 @@ var ParentTmpView = wgp.AbstractView
 				});
 				$("#killedButton").button();
 				$("#killedButton").click(instance._changeToKilled);
+
+				$("#startButton").css({
+					// marginLeft:"10px",
+					width : halook.nodeButton.width,
+					height : halook.nodeButton.height,
+					float : "left",
+					marginLeft : halook.buttons.marginLeft,
+
+				});
+				$("#startButton").button();
+				$("#startButton").click(instance._changeToFinish);
+
+				$("#finishButton").css({
+					// marginLeft:"10px",
+					width : halook.nodeButton.width,
+					height : halook.nodeButton.height,
+					float : "left",
+					marginLeft : halook.buttons.marginLeft,
+
+				});
+				$("#finishButton").button();
+				$("#finishButton").click(instance._changeToStart);
 
 				// $("#searchSpace").css({
 				// "margin-left" : 10
@@ -598,6 +639,33 @@ var ParentTmpView = wgp.AbstractView
 					// console.log("change to node " + this);
 					halook.arrowChartView.redraw("node");
 				}
+			},
+			_changeToStart : function() {
+
+				startTimeOdd *=(-1);
+				// console.log("change to node " + DisplayMode + " task");
+				halook.taskDataForShow = halook.taskDataOriginal;
+				halook.filterMode = null;
+
+				DisplayMode = "starttime";
+				halook.parentViewer._executeTaskSort(halook.taskDataForShow,
+						DisplayMode);
+				// console.log("change to node " + this);
+				halook.arrowChartView.redraw("node");
+
+			},
+			_changeToFinish : function() {
+				finishTimeOdd *=(-1);
+				// console.log("change to node " + DisplayMode + " task");
+				halook.taskDataForShow = halook.taskDataOriginal;
+				halook.filterMode = null;
+
+				DisplayMode = "finishtime";
+				halook.parentViewer._executeTaskSort(halook.taskDataForShow,
+						DisplayMode);
+				// console.log("change to node " + this);
+				halook.arrowChartView.redraw("node");
+
 			},
 			_changeToFail : function() {
 				if (halook.filterMode != "fail") {
