@@ -70,9 +70,10 @@ halook.parentView.taskSortFunctionTable = {
 halook.arrowChartView;
 
 // グラフ最小の時間 1346160591446 1346843780000
-halook.parentView.minGraphTime = 1346837780000;
+halook.parentView.minGraphTime = 1346986703230;
 // グラフ最大の時間
-halook.parentView.maxGraphTime = 1346875209800;
+halook.parentView.maxGraphTime = 1346987603230;
+console.log( halook.parentView.maxGraphTime + "  " + halook.parentView.minGraphTime);
 // グラフのインターバルの時間
 halook.parentView.intervalTime = halook.parentView.maxGraphTime
 		- halook.parentView.minGraphTime;
@@ -522,7 +523,7 @@ var ParentTmpView = wgp.AbstractView
 
 				});
 				$("#startButton").button();
-				$("#startButton").click(instance._changeToFinish);
+				$("#startButton").click(instance._changeToStart);
 
 				$("#finishButton").css({
 					// marginLeft:"10px",
@@ -533,7 +534,7 @@ var ParentTmpView = wgp.AbstractView
 
 				});
 				$("#finishButton").button();
-				$("#finishButton").click(instance._changeToStart);
+				$("#finishButton").click(instance._changeToFinish);
 
 				// $("#searchSpace").css({
 				// "margin-left" : 10
@@ -787,12 +788,19 @@ var ParentTmpView = wgp.AbstractView
 			getTermData : function() {
 				// console.log("getDataNow");
 				_.each(this.collection.models, function(model) {
+					var deleteFlag = false;
 					var valueString = model.get("measurementValue");
 					var value = $.parseJSON(valueString);
 					if (value == null)
 						return;
 					for ( var i = 0; i < value.length; ++i) {
-						getFromServerDatas.push(value[i]);
+//						if(targetJobID == value[i].JobID){
+							getFromServerDatas.push(value[i]);
+//						}else{
+//							
+//						}
+						
+						
 					}
 					// console.log(value);
 

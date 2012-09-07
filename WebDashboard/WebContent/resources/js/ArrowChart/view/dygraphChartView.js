@@ -56,7 +56,7 @@ var DygraphChartView = wgp.DygraphElementView.extend({
 		this.viewType = wgp.constants.VIEW_TYPE.VIEW;
 		this.collection = new dygraphModelCollection();
 		this.attributes = {
-			xlabel : "time [jikan]",
+			xlabel : "time [Date]",
 			ylabel : "num ",
 			drawPoints : true,
 			pointSize : 10,
