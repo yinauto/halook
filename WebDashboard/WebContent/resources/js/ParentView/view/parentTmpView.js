@@ -278,8 +278,7 @@ var ParentTmpView = wgp.AbstractView
 				var realTag = $("#" + this.$el.attr("id"));
 				var dt = new Date();
 
-				appView.getTermData([ "/mapreduce/task%" ], new Date(dt
-						.getTime() - 1000000000), new Date());
+				appView.getTermData([ "/mapreduce/task%" ], new Date(halook.parentView.minGraphTime), new Date(halook.parentView.maxGraphTime));
 
 				halook.parentViewer = this;
 
